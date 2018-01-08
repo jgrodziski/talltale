@@ -39,6 +39,16 @@ Require the core namespace, every generators is merged into the core namespace f
 ;;  :org-id "ADAPT", :phone-number "124-124-0124", :tld "com",
 ;;  :type "Associates", :url "https://www.adapt.com"}
 
+(person)
+;; => {:address {:city "San Francisco", :postal-code "10000",
+;;            :street "Summer Place", :street-number 1},
+;;  :age 37,
+;;  :date-of-birth #object[org.joda.time.LocalDate 0x7d24c344 "1981-01-08"],
+;;  :email "shannon@yahoo.com", :first-name "Khloe", :last-name "Shannon",
+;;  :phone-number "122-122-122",
+;;  :picture-url "https://randomuser.me/api/portraits/women/4.jpg", :sex :female,
+;;  :username "khloe"}
+
 ;;you got the test.check generator version
 (gen/sample (person-gen))
 
