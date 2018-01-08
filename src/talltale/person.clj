@@ -42,8 +42,18 @@
 
 (defn email [locale first-name last-name]
   (str (identifier first-name last-name) "@" (rand-data locale [:person :personal-email])))
+
 (defn email-gen [locale first-name last-name]
   (gen/return (email locale first-name last-name)))
+
+(defn picture-url
+  ([sex] (picture-url sex (rand-int 100)))
+  ([sex r]
+   (let [s (case sex :male "men" :female "women" "men")]
+     (str "https://randomuser.me/api/portraits/" s "/" r ".jpg"))))
+
+(defn picture-url-gen [sex]
+ (gen/fmap (partial picture-url sex) (check-gen/large-integer* {:min 0 :max 99}) ))
 
 (defn- person-all [locale {:keys [first-name last-name sex] :as specific}]
   (let [age (age)]
@@ -51,6 +61,7 @@
                      :email (email locale first-name last-name)
                      :age age
                      :date-of-birth (date-of-birth age)
+                     :picture-url (picture-url sex)
                      :address (address locale)})))
 
 (defn person-male
@@ -69,8 +80,9 @@
                             email (email-gen locale first-name last-name)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
+                            picture-url (picture-url-gen sex)
                             address (address-gen locale)]
-              (create-map first-name last-name sex username email age date-of-birth address))))
+              (create-map first-name last-name sex username email age date-of-birth picture-url address))))
 
 (defn person-female
   ([] (person-female :en))
@@ -89,8 +101,9 @@
                             email (email-gen locale first-name last-name)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
+                            picture-url (picture-url-gen sex)
                             address (address-gen locale)]
-              (create-map first-name last-name sex username email age date-of-birth address))))
+              (create-map first-name last-name sex username email age date-of-birth picture-url address))))
 
 (defn person
   ([] (person :en))
