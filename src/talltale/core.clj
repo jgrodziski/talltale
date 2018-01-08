@@ -1,11 +1,14 @@
 (ns talltale.core
   (:require 
-            [clojure.java.io :refer [resource]]
-            [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]
-            [talltale.samples :as samples])
+   [clojure.string :as str :refer [lower-case upper-case]]
+   [clj-time.core :as t]
+   [clojure.test.check.generators :as check-gen]
+   [clojure.spec.alpha :as s]
+   [clojure.spec.gen.alpha :as gen]
+   [clojure.java.io :refer [resource]]
+   [talltale.utils :refer [create-map]]
+   [talltale.samples :as samples])
   (:import [java.text DecimalFormat]))
-
 
 (defn raw
   "returns the raw data for the generator, locale is keyword (eg. :en or :fr) and ks is a vector of keys like with get-in"
@@ -29,31 +32,25 @@
          ([] (~namegen# ~default-locale))
          ([locale#] (gen/elements (raw locale# ~ks)))))))
 
-(do
-  (defn fn1
-    ([] (prn "fn1"))
-    ([x] (prn "fn1" x)))
-  (defn fn2 [] (prn "fn2")))
-
-
 (defn rand-excluding [n excluding]
   (loop [r (rand-int n)]
     (if (excluding r)
       (recur (rand-int n))
       r)))
 
-(defn phone-number
-  ([] (phone-number :en))
-  ([locale]
-   (let [df (rand-data locale [:phone-number-format])]
-     (case locale
-       :en (format df (rand-int 999) (rand-int 999) (rand-int 999))
-       :fr (format df (rand-int 999999999))
-       (format "%010d" (rand-int 9999999999))))))
 
 (defn lorem-ipsum []
   (rand-data :en [:lorem-ipsum]))
+(defn lorem-ipsum-gen ([] (lorem-ipsum-gen :en))
+  ([locale] (check-gen/return (raw locale [:lorem-ipsum]))))
 
 (defn text
   ([] (text :en))
   ([locale] (rand-data locale [:text])))
+(defn text-gen
+  ([](text-gen :en))
+  ([locale] (check-gen/return (rand-data locale [:text]))))
+
+(load "address")
+(load "company")
+(load "person")

@@ -1,14 +1,4 @@
-(ns talltale.person
-  (:require
-   [clojure.string :refer [lower-case]]
-   [clojure.test.check.generators :as check-gen]
-   [clojure.spec.alpha :as s]
-   [clojure.spec.gen.alpha :as gen]
-   [clj-time.core :as t]
-   [talltale.utils :refer [create-map]]
-   [talltale.address :as address :refer [address address-gen]]
-   [talltale.core :refer [raw rand-data generator-from-coll]])
-  (:import [java.text DecimalFormat]))
+(in-ns 'talltale.core)
 
 (generator-from-coll :en [:person :first-name-male])
 (generator-from-coll :en [:person :first-name-female])
@@ -59,6 +49,7 @@
   (let [age (age)]
     (merge specific {:username (username first-name last-name)
                      :email (email locale first-name last-name)
+                     :phone-number (phone-number locale)
                      :age age
                      :date-of-birth (date-of-birth age)
                      :picture-url (picture-url sex)
@@ -78,11 +69,12 @@
                             sex (gen/return :male)
                             username (username-gen first-name last-name)
                             email (email-gen locale first-name last-name)
+                            phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
-              (create-map first-name last-name sex username email age date-of-birth picture-url address))))
+              (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
 
 (defn person-female
   ([] (person-female :en))
@@ -99,11 +91,12 @@
                             sex (gen/return :female)
                             username (username-gen first-name last-name)
                             email (email-gen locale first-name last-name)
+                            phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
-              (create-map first-name last-name sex username email age date-of-birth picture-url address))))
+              (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
 
 (defn person
   ([] (person :en))

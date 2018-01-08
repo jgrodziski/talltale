@@ -1,13 +1,5 @@
-(ns talltale.address
-  (:require
-   [clojure.string :refer [lower-case]]
-   [clojure.test.check.generators :as check-gen]
-   [clojure.spec.alpha :as s]
-   [clojure.spec.gen.alpha :as gen]
-   [clj-time.core :as t]
-   [talltale.utils :refer [create-map]]
-   [talltale.core :refer [raw rand-data generator-from-coll]])
-  (:import [java.text DecimalFormat]))
+
+(in-ns 'talltale.core)
 
 (defn street-number []
   (rand-int 1000))
@@ -30,6 +22,27 @@
   ([locale] (gen/fmap (partial postal-code locale) (check-gen/large-integer* {:min 10000 :max 99999}))))
 
 (generator-from-coll :en [:address :city])
+
+(defn phone-number
+  ([] (phone-number :en))
+  ([locale]
+   (case locale
+     :en (phone-number locale (rand-int 999))
+     :fr (phone-number locale (rand-int 999999999))
+     (phone-number locale (rand-int 999999999))))
+  ([locale r]
+   (let [df (rand-data locale [:phone-number-format])]
+     (case locale
+       :en (format df r r r)
+       :fr (format df r)
+       (format "%010d" r)))))
+
+(defn phone-number-gen
+  ([] (phone-number-gen :en))
+  ([locale] (case locale
+              :en (check-gen/fmap (partial phone-number locale) (check-gen/large-integer* {:min 100 :max 999}))
+              :fr (check-gen/fmap (partial phone-number locale) (check-gen/large-integer* {:min 100000000 :max 999999999}))
+              (check-gen/fmap (partial phone-number locale) (check-gen/large-integer* {:min 100000000 :max 999999999})))))
 
 (defn address
   ([] (address :en))

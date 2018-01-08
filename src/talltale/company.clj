@@ -1,13 +1,5 @@
-(ns talltale.company
-  (:require [clj-time.core :as t]
-            [clojure.string :as str :refer [lower-case upper-case]]
-            [clojure.test.check.generators :as check-gen]
-            [clojure.spec.alpha :as s]
-            [clojure.spec.gen.alpha :as gen]
-            [talltale.address :refer [address address-gen]]
-            [talltale.utils :refer [create-map]]
-            [talltale.core :refer [rand-data rand-excluding raw generator-from-coll]])
-  (:import [clojure.test.check.generators Generator]))
+
+(in-ns 'talltale.core)
 
 (generator-from-coll :en [:company :name])
 (generator-from-coll :en [:company :type])
@@ -34,12 +26,12 @@
   (str "http://via.placeholder.com/350x150?text=" name))
 (defn logo-url-gen [name] (gen/return (logo-url name)))
 
-(defn email
-  ([domain] (email :en domain))
+(defn company-email
+  ([domain] (company-email :en domain))
   ([locale domain] (str (rand-data locale [:company :email]) "@" domain )))
-(defn email-gen
-  ([domain] (email-gen :en))
-  ([locale domain] (gen/return (email locale domain))))
+(defn company-email-gen
+  ([domain] (company-email-gen :en))
+  ([locale domain] (gen/return (company-email locale domain))))
 
 (defn in-en
   ([](in-en (rand-int 9999)))
@@ -83,16 +75,17 @@
          full-name (full-name locale name type)
          domain (domain name (tld locale))
          url (url locale domain)
-         email (email locale domain)]
+         email (company-email locale domain)]
      {:org-id (org-id name)
       :name name
       :full-name full-name
-      :identification-number (in locale)
+      :identification-number (identification-number locale)
       :domain domain
       :url url
       :logo-url (logo-url url)
       :type type
       :email email
+      :phone-numer (phone-number locale)
       :address (address locale)})))
 
 (defn company-gen
@@ -107,6 +100,7 @@
                    domain (domain-gen name tld)
                    url (url-gen domain)
                    logo-url (logo-url-gen name)
-                   email (email-gen locale domain)
+                   email (company-email-gen locale domain)
+                   phone-number (phone-number-gen locale)
                    address (address-gen locale)]
-     (create-map name org-id type identification-number full-name tld domain url logo-url email address))))
+     (create-map name org-id type identification-number full-name tld domain url logo-url email phone-number address))))
