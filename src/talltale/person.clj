@@ -5,7 +5,8 @@
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
    [clj-time.core :as t]
-   [talltale.address :as address :refer [address]]
+   [talltale.utils :refer [create-map]]
+   [talltale.address :as address :refer [address address-gen]]
    [talltale.core :refer [raw rand-data generator-from-coll]])
   (:import [java.text DecimalFormat]))
 
@@ -44,37 +45,60 @@
 (defn email-gen [locale first-name last-name]
   (gen/return (email locale first-name last-name)))
 
-(defn- person-all [locale specific]
-  (let [first-name (:first-name specific)
-        last-name (:last-name specific)
-        email (email locale first-name last-name)
-        age (age)]
-    {:first-name first-name
-     :last-name last-name
-     :username (username first-name last-name)
-     :email email
-     :date-of-birth (date-of-birth age)
-     :sex :female
-     :address (address locale)
-     :age age}))
+(defn- person-all [locale {:keys [first-name last-name sex] :as specific}]
+  (let [age (age)]
+    (merge specific {:username (username first-name last-name)
+                     :email (email locale first-name last-name)
+                     :age age
+                     :date-of-birth (date-of-birth age)
+                     :address (address locale)})))
 
 (defn person-male
   ([] (person-male :en))
   ([locale] (person-all locale
                         {:first-name (first-name-male locale)
-                         :last-name (last-name-male locale)})))
+                         :last-name (last-name-male locale)
+                         :sex :male})))
+
+(defn person-male-gen
+  ([] (person-male-gen :en))
+  ([locale] (check-gen/let [first-name (first-name-male-gen locale)
+                            last-name (last-name-male-gen locale)
+                            sex (gen/return :male)
+                            username (username-gen first-name last-name)
+                            email (email-gen locale first-name last-name)
+                            age (age-gen)
+                            date-of-birth (date-of-birth-gen age)
+                            address (address-gen locale)]
+              (create-map first-name last-name sex username email age date-of-birth address))))
+
 (defn person-female
   ([] (person-female :en))
   ([locale]
    (person-all locale
                {:first-name (first-name-female locale)
-                :last-name (last-name-female locale)})
-   ))
+                :last-name (last-name-female locale)
+                :sex :female})))
+
+(defn person-female-gen
+  ([] (person-female-gen :en))
+  ([locale] (check-gen/let [first-name (first-name-female-gen locale)
+                            last-name (last-name-female-gen locale)
+                            sex (gen/return :female)
+                            username (username-gen first-name last-name)
+                            email (email-gen locale first-name last-name)
+                            age (age-gen)
+                            date-of-birth (date-of-birth-gen age)
+                            address (address-gen locale)]
+              (create-map first-name last-name sex username email age date-of-birth address))))
 
 (defn person
   ([] (person :en))
   ([locale] (if (= (rand-int 2) 0)
               (person-male locale)
               (person-female locale))))
-(defn person-gen []
-  )
+(defn person-gen
+  ([] (person-gen :en))
+  ( [locale] (if (= (rand-int 2) 0)
+               (person-male-gen locale)
+               (person-female-gen locale))))
