@@ -64,9 +64,6 @@ Require the core namespace, every generators is merged into the core namespace f
 
 Notes: I use test.check generators for numbers, so don't be surprised by the value as they respect the ["Growth and Shrink" manner of test.check](https://github.com/clojure/test.check/blob/master/doc/growth-and-shrinking.md).
 
-## BDD usage
-Talltale can be used along (Scenari.io)[https://scenari.io] to generates data in BDD scenarios.
-
 ## License
 
 Copyright © 2018 Jeremie Grodziski 
