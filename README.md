@@ -1,7 +1,7 @@
 # Talltale
 
 Talltale is a Clojure library that generates fake data, useful for prototyping and performs things like load testing used with clojure.spec for instance.
-Talltale provides traditional Clojure's functions that generates a new value but also test.check/clojure.spec generators (with -gen suffix). I was inspired by the (JFairy lib)[https://github.com/Codearte/jfairy] (I actually copied the well-done data used by their generators).
+Talltale provides traditional Clojure's functions that generates a new value but also test.check/clojure.spec generators (with -gen suffix). I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actually copied the well-done data used by their generators).
 
 ## Installation
 
