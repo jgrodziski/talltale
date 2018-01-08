@@ -21,7 +21,7 @@ Require the core namespace, every generators is merged into the core namespace f
 ```clojure
 (use '[talltale.core])
 
-(person :fr) 
+(company :fr) 
 ;; => {:address {:city "Le Perreux-sur-Marne", :postal-code "10000",
 ;;            :street "Grande Rue", :street-number 1},
 ;;  :domain "buapel.com", :email "ventes@buapel.com", :full-name "Buapel Ltd",
@@ -30,7 +30,7 @@ Require the core namespace, every generators is merged into the core namespace f
 ;;  :org-id "BUAPEL", :phone-number "0100000000", :tld "com", :type "Ltd",
 ;;  :url "https://www.buapel.com"}
 
-(person);; default is always :en locale 
+(company);; default is always :en locale 
 ;; => {:address {:city "Miami", :postal-code "10076", :street "Ford Street",
 ;;            :street-number 233},
 ;;  :domain "adapt.com", :email "contact@adapt.com",
