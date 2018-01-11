@@ -1,4 +1,3 @@
-
 (in-ns 'talltale.core)
 
 (generator-from-coll :en [:company :name])
