@@ -1,4 +1,4 @@
-(defproject talltale "0.1.0"
+(defproject talltale "0.2.0"
   :description "A generator lib for fake data"
   :url "https://github.com/jgrodziski/talltale"
   :license {:name "Eclipse Public License"
