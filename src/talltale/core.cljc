@@ -1,44 +1,16 @@
 (ns talltale.core
-  (:require 
+  (:require
    [clojure.string :as str :refer [lower-case upper-case]]
    [clojure.pprint :refer [cl-format]]
-   [clj-time.core :as t]
    [clojure.test.check.generators :as check-gen]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
-   [clojure.java.io :refer [resource]]
-   [talltale.utils :refer [create-map]]
-   [talltale.samples :as samples])
+   #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding]])
+   #?(:clj [clj-time.core :as time])
+   #?(:cljs [cljs-time.core :as time])
+   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]]))
+  #?(:cljs (:require-macros [talltale.macros :refer [create-map generator-from-coll ]]))
   )
-
-(defn raw
-  "returns the raw data for the generator, locale is keyword (eg. :en or :fr) and ks is a vector of keys like with get-in"
-  [locale ks]
-  (get-in samples/data (cons locale ks)))
-
-(defn rand-data [locale ks]
-  (let [data (raw locale ks)]
-    (if (coll? data)
-      (get data (rand-int (count data)))
-      data)))
-
-(defmacro generator-from-coll [default-locale ks]
-  (let [name# (symbol (subs (str (last ks)) 1))
-        namegen# (symbol (str name# "-gen"))]
-    `(do 
-      (defn ~name#
-         ([] (~name# ~default-locale))
-         ([locale#] (rand-data locale# ~ks)))
-      (defn ~namegen#
-         ([] (~namegen# ~default-locale))
-         ([locale#] (gen/elements (raw locale# ~ks)))))))
-
-(defn rand-excluding [n excluding]
-  (loop [r (rand-int n)]
-    (if (excluding r)
-      (recur (rand-int n))
-      r)))
-
 
 (defn lorem-ipsum []
   (rand-data :en [:lorem-ipsum]))
@@ -52,6 +24,278 @@
   ([](text-gen :en))
   ([locale] (check-gen/return (rand-data locale [:text]))))
 
-(load "address")
-(load "company")
-(load "person")
+(defn street-number []
+  (rand-int 1000))
+
+(defn street-number-gen []
+  (check-gen/large-integer* {:min 1 :max 1000}))
+
+(generator-from-coll :en [:address :street])
+
+(defn postal-code
+  ([] (postal-code :en))
+  ([locale]
+   (postal-code locale (rand-int 99999)) )
+  ([locale rand]
+   (let [control-string (rand-data locale [:address :postal-code])]
+     (cl-format nil control-string rand))))
+
+(defn postal-code-gen
+  ([] (postal-code-gen :en))
+  ([locale] (gen/fmap (partial postal-code locale) (check-gen/large-integer* {:min 10000 :max 99999}))))
+
+(generator-from-coll :en [:address :city])
+
+(defn phone-number
+  ([] (phone-number :en))
+  ([locale]
+   (case locale
+     :en (phone-number locale (rand-int 999) (rand-int 999) (rand-int 999))
+     :fr (phone-number locale (rand-int 999999999) nil nil)
+     (phone-number locale (rand-int 999999999) nil nil)))
+  ([locale & [r1 r2 r3]]
+   (let [control-string (rand-data locale [:phone-number-format])]
+     (case locale
+       :en (cl-format nil control-string r1 r2 r3)
+       :fr (cl-format nil control-string r1)
+       (cl-format nil "~10,'0d" r1)))))
+
+(defn phone-number-gen
+  ([] (phone-number-gen :en))
+  ([locale] (case locale
+              :en
+              (check-gen/let [r1 (check-gen/large-integer* {:min 100 :max 999})
+                              r2 (check-gen/large-integer* {:min 100 :max 999})
+                              r3 (check-gen/large-integer* {:min 100 :max 999})]
+                (phone-number locale r1 r2 r3))
+              :fr (check-gen/fmap (partial phone-number locale) (check-gen/large-integer* {:min 100000000 :max 999999999}))
+              (check-gen/fmap (partial phone-number locale) (check-gen/large-integer* {:min 100000000 :max 999999999})))))
+
+(defn address
+  ([] (address :en))
+  ([locale]
+   {:street (street locale)
+    :street-number (street-number) 
+    :postal-code (postal-code locale)
+    :city (city locale)}))
+
+(defn address-gen
+  ([] (address-gen :en))
+  ([locale] (check-gen/let [street (street-gen locale)
+                            postal-code (postal-code-gen locale)
+                            city (city-gen locale)
+                            street-number (street-number-gen)]
+              (create-map street street-number postal-code city))))
+
+(generator-from-coll :en [:company :name])
+(generator-from-coll :en [:company :type])
+(generator-from-coll :en [:company :tld])
+
+(defn type
+  ([] (type :en))
+  ([locale] (rand-data locale [:company :type])))
+
+(defn full-name
+  [name type] (str name " " type))
+(defn full-name-gen [name type] (gen/return (full-name name type)))
+
+(defn domain
+  [name tld] (str (lower-case name) "." tld))
+(defn domain-gen [name tld] (gen/return (domain name tld)))
+
+(defn url
+  [domain] (str "https://www." domain))
+(defn url-gen [domain] (gen/return (url domain)))
+
+(defn logo-url
+  [name]
+  (str "http://via.placeholder.com/350x150?text=" name))
+(defn logo-url-gen [name] (gen/return (logo-url name)))
+
+(defn company-email
+  ([domain] (company-email :en domain))
+  ([locale domain] (str (rand-data locale [:company :email]) "@" domain )))
+(defn company-email-gen
+  ([domain] (company-email-gen :en))
+  ([locale domain] (gen/return (company-email locale domain))))
+
+(defn in-en
+  ([](in-en (rand-int 9999)))
+  ([rand]
+   (let [serial (cl-format nil "~7,'0d" rand)
+         area-excluding-numbers #{7, 8, 9, 17, 18, 19, 28, 29, 41, 47, 49, 69, 70, 79, 89, 96, 97}
+         area (cl-format nil "~2,'0d" (rand-excluding 99 area-excluding-numbers))]
+     (str area "-" serial))))
+
+(defn in-fr
+  ([] (in-fr (rand-int 99999999)))
+  ([rand]
+   (cl-format nil "~8,'0d" rand)))
+
+(defn identification-number
+  ([] (in-en))
+  ([locale] (case locale
+              :en (in-en)
+              :fr (in-fr)
+              (in-en)))
+  ([locale rand] (case locale
+                   :en (in-en rand)
+                   :fr (in-fr rand)
+                   (in-en rand))))
+(defn identification-number-gen
+  ([] (identification-number-gen :en))
+  ([locale] (case locale
+              :en (gen/fmap in-en (check-gen/large-integer* {:min 1 :max 9999}))
+              :fr (gen/fmap in-fr (check-gen/large-integer* {:min 1 :max 99999999})))))
+
+(defn org-id [name]
+  (upper-case (str/replace name #" " "")))
+(defn org-id-gen [name]
+  (gen/return (org-id name)))
+
+(defn company
+  ([] (company :en))
+  ([locale]
+   (let [name (name locale)
+         type (type locale)
+         full-name (full-name name type)
+         domain (domain name (tld locale))
+         url (url domain)
+         email (company-email locale domain)]
+     {:org-id (org-id name)
+      :name name
+      :full-name full-name
+      :identification-number (identification-number locale)
+      :domain domain
+      :url url
+      :logo-url (logo-url url)
+      :type type
+      :email email
+      :phone-number (phone-number locale)
+      :address (address locale)})))
+
+(defn company-gen
+  ([] (company-gen :en))
+  ([locale]
+   (check-gen/let [name (name-gen)
+                   org-id (org-id-gen name)
+                   type (type-gen)
+                   identification-number (identification-number-gen locale)
+                   full-name (full-name-gen name type)
+                   tld (tld-gen)
+                   domain (domain-gen name tld)
+                   url (url-gen domain)
+                   logo-url (logo-url-gen name)
+                   email (company-email-gen locale domain)
+                   phone-number (phone-number-gen locale)
+                   address (address-gen locale)]
+     (create-map name org-id type identification-number full-name tld domain url logo-url email phone-number address))))
+
+(generator-from-coll :en [:person :first-name-male])
+(generator-from-coll :en [:person :first-name-female])
+(generator-from-coll :en [:person :last-name-male])
+(generator-from-coll :en [:person :last-name-female])
+
+(defn age []
+  (rand-int 110))
+(defn age-gen []
+  (check-gen/large-integer* {:min 18 :max 110}))
+
+(defn date-of-birth [age]
+  (time/minus (time/today) (time/years age)))
+(defn date-of-birth-gen [age]
+  (gen/return (date-of-birth age)))
+
+(defn- identifier [first-name last-name]
+  (let [lower-fn (lower-case first-name)
+        lower-ln (lower-case last-name)
+        generators {:initial-last-name (fn [] (str (subs lower-fn 0 1) lower-ln))
+                    :first-dot-last (fn [] (str lower-fn "." lower-ln))
+                    :first-number (fn [] (str lower-fn (rand-int 999)))
+                    :last (fn [] lower-ln)
+                    :first (fn [] lower-fn)}]
+    (str ((get (vec (vals generators)) (rand-int (count generators)))))))
+
+(defn username [first-name last-name]
+  (identifier first-name last-name))
+(defn username-gen [first-name last-name]
+  (gen/return (username first-name last-name)))
+
+(defn email [locale first-name last-name]
+  (str (identifier first-name last-name) "@" (rand-data locale [:person :personal-email])))
+
+(defn email-gen [locale first-name last-name]
+  (gen/return (email locale first-name last-name)))
+
+(defn picture-url
+  ([sex] (picture-url sex (rand-int 100)))
+  ([sex r]
+   (let [s (case sex :male "men" :female "women" "men")]
+     (str "https://randomuser.me/api/portraits/" s "/" r ".jpg"))))
+
+(defn picture-url-gen [sex]
+ (gen/fmap (partial picture-url sex) (check-gen/large-integer* {:min 0 :max 99}) ))
+
+(defn- person-all [locale {:keys [first-name last-name sex] :as specific}]
+  (let [age (age)]
+    (merge specific {:username (username first-name last-name)
+                     :email (email locale first-name last-name)
+                     :phone-number (phone-number locale)
+                     :age age
+                     :date-of-birth (date-of-birth age)
+                     :picture-url (picture-url sex)
+                     :address (address locale)})))
+
+(defn person-male
+  ([] (person-male :en))
+  ([locale] (person-all locale
+                        {:first-name (first-name-male locale)
+                         :last-name (last-name-male locale)
+                         :sex :male})))
+
+(defn person-male-gen
+  ([] (person-male-gen :en))
+  ([locale] (check-gen/let [first-name (first-name-male-gen locale)
+                            last-name (last-name-male-gen locale)
+                            sex (gen/return :male)
+                            username (username-gen first-name last-name)
+                            email (email-gen locale first-name last-name)
+                            phone-number (phone-number-gen locale)
+                            age (age-gen)
+                            date-of-birth (date-of-birth-gen age)
+                            picture-url (picture-url-gen sex)
+                            address (address-gen locale)]
+              (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
+
+(defn person-female
+  ([] (person-female :en))
+  ([locale]
+   (person-all locale
+               {:first-name (first-name-female locale)
+                :last-name (last-name-female locale)
+                :sex :female})))
+
+(defn person-female-gen
+  ([] (person-female-gen :en))
+  ([locale] (check-gen/let [first-name (first-name-female-gen locale)
+                            last-name (last-name-female-gen locale)
+                            sex (gen/return :female)
+                            username (username-gen first-name last-name)
+                            email (email-gen locale first-name last-name)
+                            phone-number (phone-number-gen locale)
+                            age (age-gen)
+                            date-of-birth (date-of-birth-gen age)
+                            picture-url (picture-url-gen sex)
+                            address (address-gen locale)]
+              (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
+
+(defn person
+  ([] (person :en))
+  ([locale] (if (= (rand-int 2) 0)
+              (person-male locale)
+              (person-female locale))))
+(defn person-gen
+  ([] (person-gen :en))
+  ( [locale] (if (= (rand-int 2) 0)
+               (person-male-gen locale)
+               (person-female-gen locale))))

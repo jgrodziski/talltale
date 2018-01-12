@@ -11,7 +11,7 @@
   (check-gen/large-integer* {:min 18 :max 110}))
 
 (defn date-of-birth [age]
-  (t/minus (t/today) (t/years age)))
+  (time/minus (time/today) (time/years age)))
 (defn date-of-birth-gen [age]
   (gen/return (date-of-birth age)))
 

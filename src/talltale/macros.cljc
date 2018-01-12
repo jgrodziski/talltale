@@ -1,0 +1,36 @@
+(ns talltale.macros
+  (:require
+   [clojure.spec.gen.alpha :as gen]
+   [talltale.samples :as samples]))
+
+(defn raw
+  "returns the raw data for the generator, locale is keyword (eg. :en or :fr) and ks is a vector of keys like with get-in"
+  [locale ks]
+  (get-in samples/data (cons locale ks)))
+
+(defn rand-data [locale ks]
+  (let [data (raw locale ks)]
+    (if (coll? data)
+      (get data (rand-int (count data)))
+      data)))
+
+(defn rand-excluding [n excluding]
+  (loop [r (rand-int n)]
+    (if (excluding r)
+      (recur (rand-int n))
+      r)))
+
+(defmacro create-map
+  [& syms]
+  (zipmap (map keyword syms) syms))
+
+(defmacro generator-from-coll [default-locale ks]
+  (let [name# (symbol (subs (str (last ks)) 1))
+        namegen# (symbol (str name# "-gen"))]
+    `(do 
+       (defn ~name#
+         ([] (~name# ~default-locale))
+         ([locale#] (rand-data locale# ~ks)))
+       (defn ~namegen#
+         ([] (~namegen# ~default-locale))
+         ([locale#] (gen/elements (raw locale# ~ks)))))))
