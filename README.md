@@ -48,6 +48,13 @@ Require the core namespace, every generators is merged into the core namespace f
 ;;  :phone-number "122-122-122",
 ;;  :picture-url "https://randomuser.me/api/portraits/women/4.jpg", :sex :female,
 ;;  :username "khloe"}
+(username (first-name) (last-name))
+(age);; => 56
+(-> age date-of-birth);; => return a LocalDate object on JVM or cljs-time on JS
+(first-name :fr);;random considering the gender (frequency 0f 0.5 for both)
+(first-name-male :en);;=> "Logan"
+(email (first-name) (last-name) );; => 
+(picture-url :female)
 
 ;;you got the test.check generator version
 (gen/sample (person-gen))
@@ -56,8 +63,8 @@ Require the core namespace, every generators is merged into the core namespace f
          ;;               :street "Summer Place", :street-number 1}
 (address-gen);; => return a Generator
 (phone-number);;=> "124-124-0124"
-(company)
-(company-gen)
+(company-gen);; => return a Generator
+(gen/sample (company-gen))
 (lorem-ipsum)
 (text)
 
@@ -70,6 +77,11 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 If you want to try Talltale with [Planck](http://planck-repl.org/):
 ```bash
 planck -D talltale:0.2.0,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
+```
+then
+```clojure
+(require 'talltale.core)
+(in-ns 'talltale.core)
 ```
 
 ## License

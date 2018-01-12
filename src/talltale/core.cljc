@@ -1,15 +1,16 @@
 (ns talltale.core
+  #?(:cljs (:refer-clojure :exclude [name type]))
   (:require
+   [clojure.core :refer [name type] :rename {name core-name type core-type}]
    [clojure.string :as str :refer [lower-case upper-case]]
    [clojure.pprint :refer [cl-format]]
    [clojure.test.check.generators :as check-gen]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
-   #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding]])
-   #?(:clj [clj-time.core :as time])
    #?(:cljs [cljs-time.core :as time])
-   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]]))
-  #?(:cljs (:require-macros [talltale.macros :refer [create-map generator-from-coll ]]))
+   #?(:clj [clj-time.core :as time])
+   #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
+   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])) 
   )
 
 (defn lorem-ipsum []
@@ -60,6 +61,8 @@
        :fr (cl-format nil control-string r1)
        (cl-format nil "~10,'0d" r1)))))
 
+;;declare Var to avoid Warning in CLJS
+(def r1) (def r2) (def r3)
 (defn phone-number-gen
   ([] (phone-number-gen :en))
   ([locale] (case locale
@@ -87,13 +90,9 @@
                             street-number (street-number-gen)]
               (create-map street street-number postal-code city))))
 
-(generator-from-coll :en [:company :name])
-(generator-from-coll :en [:company :type])
+(generator-from-coll :en [:company :company-name])
+(generator-from-coll :en [:company :company-type])
 (generator-from-coll :en [:company :tld])
-
-(defn type
-  ([] (type :en))
-  ([locale] (rand-data locale [:company :type])))
 
 (defn full-name
   [name type] (str name " " type))
@@ -156,8 +155,8 @@
 (defn company
   ([] (company :en))
   ([locale]
-   (let [name (name locale)
-         type (type locale)
+   (let [name (company-name locale)
+         type (company-type locale)
          full-name (full-name name type)
          domain (domain name (tld locale))
          url (url domain)
@@ -168,18 +167,21 @@
       :identification-number (identification-number locale)
       :domain domain
       :url url
-      :logo-url (logo-url url)
+      :logo-url (logo-url name)
       :type type
       :email email
       :phone-number (phone-number locale)
       :address (address locale)})))
 
+;;declare Var to avoid Warning in CLJS
+(def first-name)(def last-name)(def email)(def sex)(def name)(def type)
+
 (defn company-gen
   ([] (company-gen :en))
   ([locale]
-   (check-gen/let [name (name-gen)
+   (check-gen/let [name (company-name-gen)
                    org-id (org-id-gen name)
-                   type (type-gen)
+                   type (company-type-gen)
                    identification-number (identification-number-gen locale)
                    full-name (full-name-gen name type)
                    tld (tld-gen)
@@ -196,13 +198,36 @@
 (generator-from-coll :en [:person :last-name-male])
 (generator-from-coll :en [:person :last-name-female])
 
+(defn first-name 
+  ([] (first-name :en))
+  ([locale] (if (= (rand-int 2) 0)
+              (first-name-male locale)
+              (first-name-female locale))))
+(defn first-name-gen
+  ([] (first-name-gen :en))
+  ( [locale] (if (= (rand-int 2) 0)
+               (first-name-male-gen locale)
+               (first-name-female-gen locale))))
+(defn last-name 
+  ([] (last-name :en))
+  ([locale] (if (= (rand-int 2) 0)
+              (last-name-male locale)
+              (last-name-female locale))))
+(defn last-name-gen
+  ([] (last-name-gen :en))
+  ( [locale] (if (= (rand-int 2) 0)
+               (last-name-male-gen locale)
+               (last-name-female-gen locale))))
+
 (defn age []
   (rand-int 110))
 (defn age-gen []
   (check-gen/large-integer* {:min 18 :max 110}))
 
-(defn date-of-birth [age]
-  (time/minus (time/today) (time/years age)))
+(defn date-of-birth
+  ([] (date-of-birth (age)))
+  ([age]
+   (time/minus (time/today) (time/years age))))
 (defn date-of-birth-gen [age]
   (gen/return (date-of-birth age)))
 
@@ -216,18 +241,29 @@
                     :first (fn [] lower-fn)}]
     (str ((get (vec (vals generators)) (rand-int (count generators)))))))
 
-(defn username [first-name last-name]
-  (identifier first-name last-name))
-(defn username-gen [first-name last-name]
-  (gen/return (username first-name last-name)))
+(defn username
+  ([] (username (first-name) (last-name)))
+  ([first-name last-name]
+   (identifier first-name last-name)))
+(defn username-gen
+  ([] (username-gen (first-name) (last-name)))
+  ([first-name last-name]
+   (gen/return (username first-name last-name))))
 
-(defn email [locale first-name last-name]
-  (str (identifier first-name last-name) "@" (rand-data locale [:person :personal-email])))
+(defn email
+  ([] (email (first-name) (last-name)))
+  ([first-name last-name] (email :en first-name last-name))
+  ([locale first-name last-name]
+   (str (identifier first-name last-name) "@" (rand-data locale [:person :personal-email]))))
 
 (defn email-gen [locale first-name last-name]
   (gen/return (email locale first-name last-name)))
 
+(defn sex []
+  (case (rand-int 2) 0 :male 1 :female))
+
 (defn picture-url
+  ([] (picture-url (sex)))
   ([sex] (picture-url sex (rand-int 100)))
   ([sex r]
    (let [s (case sex :male "men" :female "women" "men")]

@@ -28,5 +28,7 @@
   ([] (credit-card-number 10))
   ([n]
    (let [ccn-seq (map (fn [digit] (rand-int 10)) (range n))
-         check-digit (check-digit ccn-seq)]
-     (Long/valueOf (apply str (conj ccn-seq check-digit))))))
+         check-digit (check-digit ccn-seq)
+         ccn (apply str (conj ccn-seq check-digit))]
+     #?(:clj (Long/valueOf ccn))
+     #?(:cljs (js/Number ccn) ))))
