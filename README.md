@@ -23,21 +23,21 @@ Require the core namespace, every generators is merged into the core namespace f
 
 (company :fr) 
 ;; => {:address {:city "Le Perreux-sur-Marne", :postal-code "10000",
-;;            :street "Grande Rue", :street-number 1},
-;;  :domain "buapel.com", :email "ventes@buapel.com", :full-name "Buapel Ltd",
-;;  :identification-number "00000001",
-;;  :logo-url "http://via.placeholder.com/350x150?text=Buapel", :name "Buapel",
-;;  :org-id "BUAPEL", :phone-number "0100000000", :tld "com", :type "Ltd",
-;;  :url "https://www.buapel.com"}
+;;               :street "Grande Rue", :street-number 1},
+;;     :domain "buapel.com", :email "ventes@buapel.com", :full-name "Buapel Ltd",
+;;     :identification-number "00000001",
+;;     :logo-url "http://via.placeholder.com/350x150?text=Buapel", :name "Buapel",
+;;     :org-id "BUAPEL", :phone-number "0100000000", :tld "com", :type "Ltd",
+;;     :url "https://www.buapel.com"}
 
 (company);; default is always :en locale 
 ;; => {:address {:city "Miami", :postal-code "10076", :street "Ford Street",
-;;            :street-number 233},
-;;  :domain "adapt.com", :email "contact@adapt.com",
-;;  :full-name "Adapt Associates", :identification-number "12-0000016",
-;;  :logo-url "http://via.placeholder.com/350x150?text=Adapt", :name "Adapt",
-;;  :org-id "ADAPT", :phone-number "124-124-0124", :tld "com",
-;;  :type "Associates", :url "https://www.adapt.com"}
+;;               :street-number 233},
+;;     :domain "adapt.com", :email "contact@adapt.com",
+;;     :full-name "Adapt Associates", :identification-number "12-0000016",
+;;     :logo-url "http://via.placeholder.com/350x150?text=Adapt", :name "Adapt",
+;;     :org-id "ADAPT", :phone-number "124-124-0124", :tld "com",
+;;     :type "Associates", :url "https://www.adapt.com"}
 
 (person)
 ;; => {:address {:city "San Francisco", :postal-code "10000",
@@ -52,8 +52,9 @@ Require the core namespace, every generators is merged into the core namespace f
 ;;you got the test.check generator version
 (gen/sample (person-gen))
 
-(address)
-(address-gen)
+(address);; => {:address {:city "San Francisco", :postal-code "10000",
+         ;;               :street "Summer Place", :street-number 1}
+(address-gen);; => return a Generator
 (phone-number);;=> "124-124-0124"
 (company)
 (company-gen)
