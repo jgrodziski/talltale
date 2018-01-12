@@ -76,5 +76,4 @@ planck -D talltale:0.2.0,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.chec
 
 Copyright © 2018 Jeremie Grodziski 
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the Eclipse Public License either version 1.0.
