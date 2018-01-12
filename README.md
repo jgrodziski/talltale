@@ -1,6 +1,6 @@
 # Talltale
 
-Talltale is a Clojure library that generates fake data, useful for prototyping or load testing. Can be used with [clojure.spec](https://clojure.org/guides/spec) for instance.
+Talltale is a Clojure(Script) library that generates fake data, useful for prototyping or load testing. Can be used with [clojure.spec](https://clojure.org/guides/spec) for instance.
 
 Talltale provides traditional Clojure's functions that generates values but also [test.check](https://github.com/clojure/test.check)/[clojure.spec](https://clojure.org/guides/spec) generators (with -gen suffix). 
 
@@ -64,6 +64,13 @@ Require the core namespace, every generators is merged into the core namespace f
 ```
 
 Notes: I use test.check generators for numbers, so don't be surprised by the value as they respect the ["Growth and Shrink" manner of test.check](https://github.com/clojure/test.check/blob/master/doc/growth-and-shrinking.md).
+
+## ClojureScript
+
+If you want to try Talltale with (Planck)[http://planck-repl.org/]:
+```bash
+planck -D talltale:0.2.0,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
+```
 
 ## License
 
