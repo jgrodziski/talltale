@@ -72,6 +72,58 @@ Require the core namespace, every generators is merged into the core namespace f
 
 Notes: I use test.check generators for numbers, so don't be surprised by the value as they respect the ["Growth and Shrink" manner of test.check](https://github.com/clojure/test.check/blob/master/doc/growth-and-shrinking.md).
 
+### All available generators
+
+```clojure
+(keys (ns-publics 'talltale.core))
+;; Common
+(text)
+(lorem-ipsum) 
+
+;; Address
+(street-number) 
+(street) 
+(postal-code) 
+(city) 
+(phone-number) 
+(address) 
+
+;; Company
+(org-id) 
+(company-type) 
+(name) 
+(company-name) 
+(email) 
+(full-name) 
+(company-email) 
+(type) 
+(identification-number)
+(tld) 
+(domain) 
+(url) 
+(logo-url) 
+(company) 
+
+;; Person
+(sex) 
+(username) 
+(first-name) 
+(first-name-male) 
+(first-name-female) 
+(last-name) 
+(last-name-male) 
+(last-name-female) 
+(age) 
+(date-of-birth) 
+(picture-url) 
+(person-male) 
+(person-female) 
+(person) 
+```
+
+Remember that you can just add the `-gen` suffix to get a test.check/clojure.spec generator that you can use with `gen/sample`.
+Also each function/generator accept a locale as first argument with `:en` and `:fr` as the first ones provided.
+
 ## ClojureScript
 
 If you want to try Talltale with [Planck](http://planck-repl.org/):
