@@ -67,7 +67,7 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 
 ## ClojureScript
 
-If you want to try Talltale with (Planck)[http://planck-repl.org/]:
+If you want to try Talltale with [Planck](http://planck-repl.org/):
 ```bash
 planck -D talltale:0.2.0,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
 ```
