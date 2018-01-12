@@ -1,4 +1,3 @@
-
 (in-ns 'talltale.core)
 
 (defn street-number []
@@ -14,8 +13,8 @@
   ([locale]
    (postal-code locale (rand-int 99999)) )
   ([locale rand]
-   (let [df (DecimalFormat.(rand-data locale [:address :postal-code]))]
-     (.format df rand))))
+   (let [control-string (rand-data locale [:address :postal-code])]
+     (cl-format nil control-string rand))))
 
 (defn postal-code-gen
   ([] (postal-code-gen :en))

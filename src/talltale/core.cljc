@@ -1,6 +1,7 @@
 (ns talltale.core
   (:require 
    [clojure.string :as str :refer [lower-case upper-case]]
+   [clojure.pprint :refer [cl-format]]
    [clj-time.core :as t]
    [clojure.test.check.generators :as check-gen]
    [clojure.spec.alpha :as s]
@@ -8,7 +9,7 @@
    [clojure.java.io :refer [resource]]
    [talltale.utils :refer [create-map]]
    [talltale.samples :as samples])
-  (:import [java.text DecimalFormat]))
+  )
 
 (defn raw
   "returns the raw data for the generator, locale is keyword (eg. :en or :fr) and ks is a vector of keys like with get-in"

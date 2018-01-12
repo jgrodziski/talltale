@@ -71,9 +71,9 @@
   ([locale]
    (let [name (name locale)
          type (type locale)
-         full-name (full-name locale name type)
+         full-name (full-name name type)
          domain (domain name (tld locale))
-         url (url locale domain)
+         url (url domain)
          email (company-email locale domain)]
      {:org-id (org-id name)
       :name name
