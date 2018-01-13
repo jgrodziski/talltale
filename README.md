@@ -90,13 +90,11 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 
 ;; Company
 (org-id) 
-(company-type) 
-(name) 
 (company-name) 
+(company-type) 
 (email) 
 (full-name) 
 (company-email) 
-(type) 
 (identification-number)
 (tld) 
 (domain) 
