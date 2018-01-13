@@ -25,6 +25,10 @@
   ([](text-gen :en))
   ([locale] (check-gen/return (rand-data locale [:text]))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                              ;;
+;;                 ADDRESS STUFF                                ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn street-number []
   (rand-int 1000))
 
@@ -90,109 +94,11 @@
                             street-number (street-number-gen)]
               (create-map street street-number postal-code city))))
 
-(generator-from-coll :en [:company :company-name])
-(generator-from-coll :en [:company :company-type])
-(generator-from-coll :en [:company :tld])
 
-(defn full-name
-  [name type] (str name " " type))
-(defn full-name-gen [name type] (gen/return (full-name name type)))
-
-(defn domain
-  [name tld] (str (lower-case name) "." tld))
-(defn domain-gen [name tld] (gen/return (domain name tld)))
-
-(defn url
-  [domain] (str "https://www." domain))
-(defn url-gen [domain] (gen/return (url domain)))
-
-(defn logo-url
-  [name]
-  (str "http://via.placeholder.com/350x150?text=" name))
-(defn logo-url-gen [name] (gen/return (logo-url name)))
-
-(defn company-email
-  ([domain] (company-email :en domain))
-  ([locale domain] (str (rand-data locale [:company :email]) "@" domain )))
-(defn company-email-gen
-  ([domain] (company-email-gen :en))
-  ([locale domain] (gen/return (company-email locale domain))))
-
-(defn in-en
-  ([](in-en (rand-int 9999)))
-  ([rand]
-   (let [serial (cl-format nil "~7,'0d" rand)
-         area-excluding-numbers #{7, 8, 9, 17, 18, 19, 28, 29, 41, 47, 49, 69, 70, 79, 89, 96, 97}
-         area (cl-format nil "~2,'0d" (rand-excluding 99 area-excluding-numbers))]
-     (str area "-" serial))))
-
-(defn in-fr
-  ([] (in-fr (rand-int 99999999)))
-  ([rand]
-   (cl-format nil "~8,'0d" rand)))
-
-(defn identification-number
-  ([] (in-en))
-  ([locale] (case locale
-              :en (in-en)
-              :fr (in-fr)
-              (in-en)))
-  ([locale rand] (case locale
-                   :en (in-en rand)
-                   :fr (in-fr rand)
-                   (in-en rand))))
-(defn identification-number-gen
-  ([] (identification-number-gen :en))
-  ([locale] (case locale
-              :en (gen/fmap in-en (check-gen/large-integer* {:min 1 :max 9999}))
-              :fr (gen/fmap in-fr (check-gen/large-integer* {:min 1 :max 99999999})))))
-
-(defn org-id [name]
-  (upper-case (str/replace name #" " "")))
-(defn org-id-gen [name]
-  (gen/return (org-id name)))
-
-(defn company
-  ([] (company :en))
-  ([locale]
-   (let [name (company-name locale)
-         type (company-type locale)
-         full-name (full-name name type)
-         domain (domain name (tld locale))
-         url (url domain)
-         email (company-email locale domain)]
-     {:org-id (org-id name)
-      :name name
-      :full-name full-name
-      :identification-number (identification-number locale)
-      :domain domain
-      :url url
-      :logo-url (logo-url name)
-      :type type
-      :email email
-      :phone-number (phone-number locale)
-      :address (address locale)})))
-
-;;declare Var to avoid Warning in CLJS
-(def first-name)(def last-name)(def email)(def sex)(def name)(def type)
-
-(defn company-gen
-  ([] (company-gen :en))
-  ([locale]
-   (check-gen/let [name (company-name-gen)
-                   org-id (org-id-gen name)
-                   type (company-type-gen)
-                   identification-number (identification-number-gen locale)
-                   full-name (full-name-gen name type)
-                   tld (tld-gen)
-                   domain (domain-gen name tld)
-                   url (url-gen domain)
-                   logo-url (logo-url-gen name)
-                   email (company-email-gen locale domain)
-                   phone-number (phone-number-gen locale)
-                   address (address-gen locale)]
-     (create-map name org-id type identification-number full-name tld domain url logo-url email phone-number address))))
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                              ;;
+;;                 PERSON STUFF                                 ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (generator-from-coll :en [:person :first-name-male])
 (generator-from-coll :en [:person :first-name-female])
 (generator-from-coll :en [:person :last-name-male])
@@ -243,10 +149,12 @@
 
 (defn username
   ([] (username (first-name) (last-name)))
+  ([locale] (username (first-name locale) (last-name locale)))
   ([first-name last-name]
    (identifier first-name last-name)))
 (defn username-gen
   ([] (username-gen (first-name) (last-name)))
+  ([locale] (username-gen (first-name locale) (last-name locale)))
   ([first-name last-name]
    (gen/return (username first-name last-name))))
 
@@ -335,3 +243,111 @@
   ( [locale] (if (= (rand-int 2) 0)
                (person-male-gen locale)
                (person-female-gen locale))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                              ;;
+;;                 COMPANY STUFF                                ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(generator-from-coll :en [:company :company-name])
+(generator-from-coll :en [:company :company-type])
+(generator-from-coll :en [:company :tld])
+
+(defn full-name
+  [name type] (str name " " type))
+(defn full-name-gen [name type] (gen/return (full-name name type)))
+
+(defn domain
+  [name tld] (str (lower-case name) "." tld))
+(defn domain-gen [name tld] (gen/return (domain name tld)))
+
+(defn url
+  [domain] (str "https://www." domain))
+(defn url-gen [domain] (gen/return (url domain)))
+
+(defn logo-url
+  [name]
+  (str "http://via.placeholder.com/350x150?text=" name))
+(defn logo-url-gen [name] (gen/return (logo-url name)))
+
+(defn company-email
+  ([domain] (company-email :en domain))
+  ([locale domain] (str (rand-data locale [:company :email]) "@" domain )))
+(defn company-email-gen
+  ([domain] (company-email-gen :en))
+  ([locale domain] (gen/return (company-email locale domain))))
+
+(defn in-en
+  ([](in-en (rand-int 9999)))
+  ([rand]
+   (let [serial (cl-format nil "~7,'0d" rand)
+         area-excluding-numbers #{7, 8, 9, 17, 18, 19, 28, 29, 41, 47, 49, 69, 70, 79, 89, 96, 97}
+         area (cl-format nil "~2,'0d" (rand-excluding 99 area-excluding-numbers))]
+     (str area "-" serial))))
+
+(defn in-fr
+  ([] (in-fr (rand-int 99999999)))
+  ([rand]
+   (cl-format nil "~8,'0d" rand)))
+
+(defn identification-number
+  ([] (in-en))
+  ([locale] (case locale
+              :en (in-en)
+              :fr (in-fr)
+              (in-en)))
+  ([locale rand] (case locale
+                   :en (in-en rand)
+                   :fr (in-fr rand)
+                   (in-en rand))))
+(defn identification-number-gen
+  ([] (identification-number-gen :en))
+  ([locale] (case locale
+              :en (gen/fmap in-en (check-gen/large-integer* {:min 1 :max 9999}))
+              :fr (gen/fmap in-fr (check-gen/large-integer* {:min 1 :max 99999999})))))
+
+(defn org-id [name]
+  (upper-case (str/replace name #" " "")))
+(defn org-id-gen [name]
+  (gen/return (org-id name)))
+
+(defn company
+  ([] (company :en))
+  ([locale]
+   (let [name (company-name locale)
+         type (company-type locale)
+         full-name (full-name name type)
+         domain (domain name (tld locale))
+         url (url domain)
+         email (company-email locale domain)]
+     {:org-id (org-id name)
+      :company-name name
+      :full-name full-name
+      :identification-number (identification-number locale)
+      :domain domain
+      :url url
+      :logo-url (logo-url name)
+      :company-type type
+      :email email
+      :phone-number (phone-number locale)
+      :address (address locale)
+      :updated-by (username locale)})))
+
+;;declare Var to avoid Warning in CLJS because of test.check let macro
+(def first-name)(def last-name)(def email)(def sex)(def company-name)(def company-type)
+
+(defn company-gen
+  ([] (company-gen :en))
+  ([locale]
+   (check-gen/let [company-name (company-name-gen)
+                   org-id (org-id-gen name)
+                   company-type (company-type-gen)
+                   identification-number (identification-number-gen locale)
+                   full-name (full-name-gen name type)
+                   tld (tld-gen)
+                   domain (domain-gen name tld)
+                   url (url-gen domain)
+                   logo-url (logo-url-gen name)
+                   email (company-email-gen locale domain)
+                   phone-number (phone-number-gen locale)
+                   address (address-gen locale)]
+     (create-map company-name org-id company-type identification-number full-name tld domain url logo-url email phone-number address))))

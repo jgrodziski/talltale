@@ -16,7 +16,7 @@ I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actual
 Declare the lib dependency in Leiningen:
 
 ```clojure
-[talltale "0.2.1"]
+[talltale "0.2.2"]
 ```
 
 ## Usage
@@ -125,6 +125,7 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 ```
 
 Remember that you can just add the `-gen` suffix to get a test.check/clojure.spec generator that you can use with `gen/sample`.
+
 Also each function/generator accept a locale as first argument with `:en` and `:fr` as the first ones provided.
 
 ## ClojureScript
