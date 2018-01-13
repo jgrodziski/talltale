@@ -6,6 +6,11 @@ Talltale provides traditional Clojure's functions that generates values but also
 
 I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actually copied the nice data used by their generators).
 
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [All Available Generators](#all-available-generators)
+4. [ClojureScript](#clojurescript)
+
 ## Installation
 
 Declare the lib dependency in Leiningen:
