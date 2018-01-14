@@ -312,11 +312,12 @@
 
 (generator-from-coll :en [:company :department])
 
+
 (defn company
   ([] (company :en))
-  ([locale]
-   (let [name (company-name locale)
-         type (company-type locale)
+  ([locale] (company locale (company-name locale)))
+  ([locale name]
+   (let [type (company-type locale)
          full-name (full-name name type)
          domain (domain name (tld locale))
          url (url domain)
@@ -333,6 +334,9 @@
       :phone-number (phone-number locale)
       :address (address locale)
       :updated-by (username locale)})))
+
+(defn company-with-name [name]
+  (company :en name))
 
 ;;declare Var to avoid Warning in CLJS because of test.check let macro
 (def first-name)(def last-name)(def email)(def sex)(def company-name)(def company-type)
