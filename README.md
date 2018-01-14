@@ -125,7 +125,7 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 (person) 
 ```
 
-Remember that you can just add the `-gen` suffix to get a test.check/clojure.spec generator that you can use with `gen/sample`.
+Remember that you can just add the `-gen` suffix to get a test.check/clojure.spec generator and then use it with `gen/sample`.
 
 Also each function/generator accept a locale as first argument with `:en` and `:fr` as the first ones provided.
 
