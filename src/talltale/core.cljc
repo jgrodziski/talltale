@@ -310,6 +310,8 @@
 (defn org-id-gen [name]
   (gen/return (org-id name)))
 
+(generator-from-coll :en [:company :department])
+
 (defn company
   ([] (company :en))
   ([locale]
