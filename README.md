@@ -96,7 +96,8 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 ;; Company
 (org-id) 
 (company-name) 
-(company-type) 
+(company-type)
+(department)
 (email) 
 (full-name) 
 (company-email) 
