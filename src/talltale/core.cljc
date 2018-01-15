@@ -7,6 +7,8 @@
    [clojure.test.check.generators :as check-gen]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
+   #?(:clj [clj-time.core :as time])
+   #?(:clj [clj-time.spec :as time-spec])
    #?(:cljs [cljs-time.core :as time])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
    #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])) 
@@ -357,5 +359,5 @@
                    phone-number (phone-number-gen locale)
                    address (address-gen locale)
                    updated-by (username-gen)
-                   update-at (s/gen :time-spec/date-time)]
+                    ]
      (create-map company-name company-id company-type identification-number full-name tld domain url logo-url email phone-number address))))
