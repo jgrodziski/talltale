@@ -8,7 +8,6 @@
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
    #?(:cljs [cljs-time.core :as time])
-   #?(:clj [clj-time.core :as time])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
    #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])) 
   )
@@ -24,6 +23,7 @@
 (defn text-gen
   ([](text-gen :en))
   ([locale] (check-gen/return (rand-data locale [:text]))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                              ;;
@@ -305,13 +305,12 @@
               :en (gen/fmap in-en (check-gen/large-integer* {:min 1 :max 9999}))
               :fr (gen/fmap in-fr (check-gen/large-integer* {:min 1 :max 99999999})))))
 
-(defn org-id [name]
+(defn company-id [name]
   (upper-case (str/replace name #" " "")))
-(defn org-id-gen [name]
-  (gen/return (org-id name)))
+(defn company-id-gen [name]
+  (gen/return (company-id name)))
 
 (generator-from-coll :en [:company :department])
-
 
 (defn company
   ([] (company :en))
@@ -322,7 +321,7 @@
          domain (domain name (tld locale))
          url (url domain)
          email (company-email locale domain)]
-     {:org-id (org-id name)
+     {:company-id (company-id name)
       :company-name name
       :full-name full-name
       :identification-number (identification-number locale)
@@ -333,7 +332,8 @@
       :email email
       :phone-number (phone-number locale)
       :address (address locale)
-      :updated-by (username locale)})))
+      :updated-by (username locale)
+      :updated-at (time/now)})))
 
 (defn company-with-name [name]
   (company :en name))
@@ -345,7 +345,7 @@
   ([] (company-gen :en))
   ([locale]
    (check-gen/let [company-name (company-name-gen)
-                   org-id (org-id-gen name)
+                   company-id (company-id-gen name)
                    company-type (company-type-gen)
                    identification-number (identification-number-gen locale)
                    full-name (full-name-gen name type)
@@ -355,5 +355,7 @@
                    logo-url (logo-url-gen name)
                    email (company-email-gen locale domain)
                    phone-number (phone-number-gen locale)
-                   address (address-gen locale)]
-     (create-map company-name org-id company-type identification-number full-name tld domain url logo-url email phone-number address))))
+                   address (address-gen locale)
+                   updated-by (username-gen)
+                   update-at (s/gen :time-spec/date-time)]
+     (create-map company-name company-id company-type identification-number full-name tld domain url logo-url email phone-number address))))
