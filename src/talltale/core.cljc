@@ -105,6 +105,7 @@
 (generator-from-coll :en [:person :first-name-female])
 (generator-from-coll :en [:person :last-name-male])
 (generator-from-coll :en [:person :last-name-female])
+(generator-from-coll :en [:person :function])
 
 (defn first-name 
   ([] (first-name :en))
@@ -136,6 +137,7 @@
   ([] (date-of-birth (age)))
   ([age]
    (time/minus (time/today) (time/years age))))
+
 (defn date-of-birth-gen [age]
   (gen/return (date-of-birth age)))
 
@@ -186,6 +188,7 @@
   (let [age (age)]
     (merge specific {:username (username first-name last-name)
                      :email (email locale first-name last-name)
+                     :function (function)
                      :phone-number (phone-number locale)
                      :age age
                      :date-of-birth (date-of-birth age)
@@ -209,6 +212,7 @@
                             phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
+                            function (function-gen)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
               (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
@@ -231,6 +235,7 @@
                             phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
+                            function (function-gen)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
               (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
@@ -240,6 +245,7 @@
   ([locale] (if (= (rand-int 2) 0)
               (person-male locale)
               (person-female locale))))
+
 (defn person-gen
   ([] (person-gen :en))
   ( [locale] (if (= (rand-int 2) 0)
