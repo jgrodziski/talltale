@@ -314,7 +314,7 @@
               :fr (gen/fmap in-fr (check-gen/large-integer* {:min 1 :max 99999999})))))
 
 (defn company-id [name]
-  (upper-case (str/replace name #" " "")))
+  (str/replace name #" " ""))
 (defn company-id-gen [name]
   (gen/return (company-id name)))
 
