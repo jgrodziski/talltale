@@ -16,7 +16,7 @@ I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actual
 Declare the lib dependency in Leiningen:
 
 ```clojure
-[talltale "0.2.2"]
+[talltale "0.2.5"]
 ```
 
 ## Usage
@@ -133,7 +133,7 @@ Also each function/generator accept a locale as first argument with `:en` and `:
 
 If you want to try Talltale with [Planck](http://planck-repl.org/):
 ```bash
-planck -D talltale:0.2.0,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
+planck -D talltale:0.2.5,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
 ```
 then
 ```clojure
