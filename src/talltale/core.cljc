@@ -9,7 +9,9 @@
    [clojure.spec.gen.alpha :as gen]
    #?(:clj [clj-time.core :as time])
    #?(:clj [clj-time.spec :as time-spec])
+   #?(:clj [clj-time.coerce :as time-coerce])
    #?(:cljs [cljs-time.core :as time])
+   #?(:cljs [cljs-time.coerce :as time-coerce])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
    #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])) 
   )
@@ -136,7 +138,8 @@
 (defn date-of-birth
   ([] (date-of-birth (age)))
   ([age]
-   (time/minus (time/today) (time/years age))))
+   #?(:clj (time-coerce/to-date-time (time/minus (time/today) (time/years age))))
+   #?(:cljs (time-coerce/to-date (time/minus (time/today) (time/years age))))))
 
 (defn date-of-birth-gen [age]
   (gen/return (date-of-birth age)))
