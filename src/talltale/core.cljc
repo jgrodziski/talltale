@@ -215,7 +215,7 @@
                             phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
-                            position (position-gen)
+                            position (position-gen locale)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
               (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
@@ -238,7 +238,7 @@
                             phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
-                            position (position-gen)
+                            position (position-gen locale)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
               (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
