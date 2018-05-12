@@ -107,7 +107,7 @@
 (generator-from-coll :en [:person :first-name-female])
 (generator-from-coll :en [:person :last-name-male])
 (generator-from-coll :en [:person :last-name-female])
-(generator-from-coll :en [:person :function])
+(generator-from-coll :en [:person :position])
 
 (defn first-name 
   ([] (first-name :en))
@@ -262,6 +262,7 @@
 (generator-from-coll :en [:company :company-name])
 (generator-from-coll :en [:company :company-type])
 (generator-from-coll :en [:company :tld])
+(generator-from-coll :en [:company :function])
 
 (defn full-name
   [name type] (str name " " type))
