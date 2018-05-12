@@ -191,7 +191,7 @@
   (let [age (age)]
     (merge specific {:username (username first-name last-name)
                      :email (email locale first-name last-name)
-                     :position (position)
+                     :position (position locale)
                      :phone-number (phone-number locale)
                      :age age
                      :date-of-birth (date-of-birth age)
