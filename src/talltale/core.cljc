@@ -191,7 +191,7 @@
   (let [age (age)]
     (merge specific {:username (username first-name last-name)
                      :email (email locale first-name last-name)
-                     :function (function)
+                     :position (position)
                      :phone-number (phone-number locale)
                      :age age
                      :date-of-birth (date-of-birth age)
@@ -215,7 +215,7 @@
                             phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
-                            function (function-gen)
+                            position (position-gen)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
               (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
@@ -238,7 +238,7 @@
                             phone-number (phone-number-gen locale)
                             age (age-gen)
                             date-of-birth (date-of-birth-gen age)
-                            function (function-gen)
+                            position (position-gen)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
               (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))

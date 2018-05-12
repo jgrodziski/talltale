@@ -16,7 +16,7 @@ I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actual
 Declare the lib dependency in Leiningen:
 
 ```clojure
-[talltale "0.2.6"]
+[talltale "0.2.9"]
 ```
 
 ## Usage
@@ -97,7 +97,7 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 (org-id) 
 (company-name) 
 (company-type)
-(department)
+(function)
 (email) 
 (full-name) 
 (company-email) 
@@ -119,6 +119,7 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 (last-name-female) 
 (age) 
 (date-of-birth) 
+(position)
 (picture-url) 
 (person-male) 
 (person-female) 
