@@ -16,7 +16,7 @@ I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actual
 Declare the lib dependency in Leiningen:
 
 ```clojure
-[talltale "0.2.9"]
+[talltale "0.2.11"]
 ```
 
 ## Usage
