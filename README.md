@@ -134,7 +134,7 @@ Also each function/generator accept a locale as first argument with `:en` and `:
 
 If you want to try Talltale with [Planck](http://planck-repl.org/):
 ```bash
-planck -D talltale:0.2.6,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
+planck -D talltale:0.2.11,com.andrewmcveigh/cljs-time:0.5.2,org.clojure/test.check:0.10.0-alpha2
 ```
 then
 ```clojure
