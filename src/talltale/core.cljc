@@ -7,14 +7,12 @@
    [clojure.test.check.generators :as check-gen]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
-   #?(:clj [clj-time.core :as time])
-   #?(:clj [clj-time.spec :as time-spec])
-   #?(:clj [clj-time.coerce :as time-coerce])
+   #?(:clj [talltale.time :as time-spec])
+   #?(:clj [java-time :as time :refer [local-date minus years instant]])
    #?(:cljs [cljs-time.core :as time])
    #?(:cljs [cljs-time.coerce :as time-coerce])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
-   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])) 
-  )
+   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])))
 
 (defn lorem-ipsum []
   (rand-data :en [:lorem-ipsum]))
@@ -138,7 +136,7 @@
 (defn date-of-birth
   ([] (date-of-birth (age)))
   ([age]
-   #?(:clj (time-coerce/to-date-time (time/minus (time/today) (time/years age))))
+   #?(:clj (local-date (time/minus (local-date) (time/years age))))
    #?(:cljs (time-coerce/to-date (time/minus (time/today) (time/years age))))))
 
 (defn date-of-birth-gen [age]
@@ -345,7 +343,7 @@
       :phone-number (phone-number locale)
       :address (address locale)
       :updated-by (username locale)
-      :updated-at (time/now)})))
+      :updated-at (instant)})))
 
 (defn company-with-name [name]
   (company :en name))
@@ -368,6 +366,5 @@
                    email (company-email-gen locale domain)
                    phone-number (phone-number-gen locale)
                    address (address-gen locale)
-                   updated-by (username-gen)
-                    ]
+                   updated-by (username-gen)]
      (create-map company-name company-id company-type identification-number full-name tld domain url logo-url email phone-number address))))

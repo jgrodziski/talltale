@@ -6,10 +6,10 @@
   (testing "address full generator"
     (is (not (nil? (address))))))
 
-(deftest company-test 
+(deftest company-test
   (testing "company full generator"
     (is (not (nil? (company))))))
 
-(deftest person-test 
+(deftest person-test
   (testing "person full generator"
     (is (not (nil? (person))))))
