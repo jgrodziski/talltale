@@ -4,7 +4,7 @@ Talltale is a Clojure(Script) library that generates fake data, useful for proto
 
 [![Clojars Project](https://img.shields.io/clojars/v/talltale.svg)](https://clojars.org/talltale)
 
-Talltale provides traditional Clojure's functions that generates values but also [test.check](https://github.com/clojure/test.check)/[clojure.spec](https://clojure.org/guides/spec) generators (with `-gen` suffix). 
+Talltale provides traditional Clojure's functions that generates values but also [test.check](https://github.com/clojure/test.check)/[clojure.spec](https://clojure.org/guides/spec) generators (with `-gen` suffix). The date objects used are Java Time objects (version 0.3.0) instead of Joda Time.
 
 I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actually copied the nice data used by their generators).
 
@@ -146,6 +146,6 @@ then
 
 ## License
 
-Copyright © 2018 Jeremie Grodziski 
+Copyright © 2019 Jeremie Grodziski 
 
 Distributed under the Eclipse Public License either version 1.0.
