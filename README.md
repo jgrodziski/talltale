@@ -66,8 +66,8 @@ Require the core namespace, every generators is merged into the core namespace f
 ;;you got the test.check generator version
 (gen/sample (person-gen))
 
-(address);; => {:address {:city "San Francisco", :postal-code "10000",
-         ;;               :street "Summer Place", :street-number 1}
+(address);; => {:city "San Francisco", :postal-code "10000",
+         ;;     :street "Summer Place", :street-number 1}
 (address-gen);; => return a Generator
 (phone-number);;=> "124-124-0124"
 (company-gen);; => return a Generator
