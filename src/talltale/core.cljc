@@ -23,14 +23,14 @@
   ([] (text :en))
   ([locale] (rand-data locale [:text])))
 (defn text-gen
-  ([](text-gen :en))
+  ([] (text-gen :en))
   ([locale] (check-gen/return (rand-data locale [:text]))))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                              ;;
 ;;                 ADDRESS STUFF                                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn street-number []
   (rand-int 1000))
 
@@ -42,7 +42,7 @@
 (defn postal-code
   ([] (postal-code :en))
   ([locale]
-   (postal-code locale (rand-int 99999)) )
+   (postal-code locale (rand-int 99999)))
   ([locale rand]
    (let [control-string (rand-data locale [:address :postal-code])]
      (cl-format nil control-string rand))))
@@ -84,7 +84,7 @@
   ([] (address :en))
   ([locale]
    {:street (street locale)
-    :street-number (street-number) 
+    :street-number (street-number)
     :postal-code (postal-code locale)
     :city (city locale)}))
 
@@ -96,37 +96,37 @@
                             street-number (street-number-gen)]
               (create-map street street-number postal-code city))))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                              ;;
 ;;                 PERSON STUFF                                 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (generator-from-coll :en [:person :first-name-male])
 (generator-from-coll :en [:person :first-name-female])
 (generator-from-coll :en [:person :last-name-male])
 (generator-from-coll :en [:person :last-name-female])
 (generator-from-coll :en [:person :position])
 
-(defn first-name 
+(defn first-name
   ([] (first-name :en))
   ([locale] (if (= (rand-int 2) 0)
               (first-name-male locale)
               (first-name-female locale))))
 (defn first-name-gen
   ([] (first-name-gen :en))
-  ( [locale] (if (= (rand-int 2) 0)
-               (first-name-male-gen locale)
-               (first-name-female-gen locale))))
-(defn last-name 
+  ([locale] (if (= (rand-int 2) 0)
+              (first-name-male-gen locale)
+              (first-name-female-gen locale))))
+(defn last-name
   ([] (last-name :en))
   ([locale] (if (= (rand-int 2) 0)
               (last-name-male locale)
               (last-name-female locale))))
 (defn last-name-gen
   ([] (last-name-gen :en))
-  ( [locale] (if (= (rand-int 2) 0)
-               (last-name-male-gen locale)
-               (last-name-female-gen locale))))
+  ([locale] (if (= (rand-int 2) 0)
+              (last-name-male-gen locale)
+              (last-name-female-gen locale))))
 
 (defn age []
   (rand-int 110))
@@ -183,7 +183,7 @@
      (str "https://randomuser.me/api/portraits/" s "/" r ".jpg"))))
 
 (defn picture-url-gen [sex]
- (gen/fmap (partial picture-url sex) (check-gen/large-integer* {:min 0 :max 99}) ))
+  (gen/fmap (partial picture-url sex) (check-gen/large-integer* {:min 0 :max 99})))
 
 (defn- person-all [locale {:keys [first-name last-name sex] :as specific}]
   (let [age (age)]
@@ -249,14 +249,15 @@
 
 (defn person-gen
   ([] (person-gen :en))
-  ( [locale] (if (= (rand-int 2) 0)
-               (person-male-gen locale)
-               (person-female-gen locale))))
+  ([locale] (if (= (rand-int 2) 0)
+              (person-male-gen locale)
+              (person-female-gen locale))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                                                              ;;
 ;;                 COMPANY STUFF                                ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (generator-from-coll :en [:company :company-name])
 (generator-from-coll :en [:company :company-type])
 (generator-from-coll :en [:company :tld])
@@ -281,13 +282,13 @@
 
 (defn company-email
   ([domain] (company-email :en domain))
-  ([locale domain] (str (rand-data locale [:company :email]) "@" domain )))
+  ([locale domain] (str (rand-data locale [:company :email]) "@" domain)))
 (defn company-email-gen
   ([domain] (company-email-gen :en))
   ([locale domain] (gen/return (company-email locale domain))))
 
 (defn in-en
-  ([](in-en (rand-int 9999)))
+  ([] (in-en (rand-int 9999)))
   ([rand]
    (let [serial (cl-format nil "~7,'0d" rand)
          area-excluding-numbers #{7, 8, 9, 17, 18, 19, 28, 29, 41, 47, 49, 69, 70, 79, 89, 96, 97}
@@ -349,7 +350,7 @@
   (company :en name))
 
 ;;declare Var to avoid Warning in CLJS because of test.check let macro
-(def first-name)(def last-name)(def email)(def sex)(def company-name)(def company-type)
+(def first-name) (def last-name) (def email) (def sex) (def company-name) (def company-type)
 
 (defn company-gen
   ([] (company-gen :en))
@@ -368,3 +369,18 @@
                    address (address-gen locale)
                    updated-by (username-gen)]
      (create-map company-name company-id company-type identification-number full-name tld domain url logo-url email phone-number address))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                                                              ;;
+;;                 THING STUFF                                  ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(generator-from-coll :en [:quality])
+(generator-from-coll :en [:shape])
+(generator-from-coll :en [:color])
+(generator-from-coll :en [:animal])
+(generator-from-coll :en [:landform])
+
+(defn quality-color-animal
+  []
+  (str/join " " [(quality) (color) (animal)]))
