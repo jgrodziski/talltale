@@ -25,13 +25,17 @@
                                                              :sha     "76568540e7f40268ad2b646110f237a60295fa3c"}}
                      :main-opts  ["-m" "cognitect.test-runner"
                                   "-d" "test"]}
-           :display {:main-opts ["-m" "metav.display"]}
-           :release {:main-opts ["-m" "metav.release"
-                                 "--spit"
-                                 "--output-dir" "src"
-                                 "--namespace" "talltale.meta"
-                                 "--formats" "clj"]}
-           :spit    {:main-opts ["-m" "metav.spit"
+           :metav   {:extra-deps {metav {:mvn/version "LATEST"}}}
+           :display {:extra-deps {metav {:mvn/version "LATEST"}}
+                     :main-opts  ["-m" "metav.display"]}
+           :release {:extra-deps {metav {:mvn/version "LATEST"}}
+                     :main-opts  ["-m" "metav.release"
+                                  "--spit"
+                                  "--output-dir" "src"
+                                  "--namespace" "talltale.meta"
+                                  "--formats" "clj"]}
+           :spit    {:extra-deps {metav {:mvn/version "LATEST"}}
+                     :main-opts ["-m" "metav.spit"
                                  "--output-dir" "src"
                                  "--namespace" "talltale.meta"
                                  "--formats" "cljc"]}}}
