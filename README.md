@@ -126,6 +126,20 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 (person-male) 
 (person-female) 
 (person) 
+
+;;various generator
+
+(quality)
+;; => "robust" "unreal" etc.
+(shape)
+;; => "circular" "oval"
+(color)
+;; => "blue" "rose"
+(animal)
+;; => "horse" "koala" 
+(landform)
+;; => "moulin" "cave" 
+
 ```
 
 Remember that you can just add the `-gen` suffix to get a test.check/clojure.spec generator and then use it with `gen/sample`.
