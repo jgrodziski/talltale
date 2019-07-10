@@ -1,6 +1,8 @@
+*.log
 /target
 /classes
 /checkouts
+node_modules
 pom.xml
 pom.xml.asc
 *.jar
@@ -9,3 +11,5 @@ pom.xml.asc
 /.nrepl-port
 .hgignore
 .hg/
+.cpcache
+.shadow-cljs

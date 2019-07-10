@@ -1,0 +1,37 @@
+{:paths ["resources" "src"]
+ :deps  {org.clojure/clojure    {:mvn/version "RELEASE"}
+         org.clojure/core.async {:mvn/version "0.4.490"}
+         clojure.java-time      {:mvn/version "0.3.2"}
+         tick                   {:mvn/version "0.4.14-alpha"}
+
+         com.lucasbradstreet/cljs-uuid-utils {:mvn/version "1.0.2"}
+         tongue                              {:mvn/version "0.2.6"}
+
+         org.apache.maven/maven-artifact {:mvn/version "3.6.0"}
+         org.clojure/test.check          {:mvn/version "0.10.0-alpha4"}}
+
+ :aliases {:dev     {:extra-deps {vvvvalvalval/scope-capture {:mvn/version "0.3.2"}
+                                  thheller/shadow-cljs       {:mvn/version "2.8.39"}}}
+           :test    {:extra-paths ["test"]
+                     :extra-deps  {org.clojure/test.check      {:mvn/version "RELEASE"}
+                                   lambdaisland/kaocha         {:mvn/version "0.0-389"}
+                                   metosin/testit              {:mvn/version "0.3.0"}
+                                   pjstadig/humane-test-output {:mvn/version "0.9.0"}}
+                     :main-opts   ["-m" "kaocha.runner"]}
+           :test-js {:extra-paths ["test"]
+                     :extra-deps  {day8.re-frame/test {:mvn/version "0.1.5"}}
+                     :main-opts   ["-m" "shadow.cljs.devtools.cli" "compile" "test"]}
+           :runner  {:extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner"
+                                                             :sha     "76568540e7f40268ad2b646110f237a60295fa3c"}}
+                     :main-opts  ["-m" "cognitect.test-runner"
+                                  "-d" "test"]}
+           :display {:main-opts ["-m" "metav.display"]}
+           :release {:main-opts ["-m" "metav.release"
+                                 "--spit"
+                                 "--output-dir" "src"
+                                 "--namespace" "talltale.meta"
+                                 "--formats" "clj"]}
+           :spit    {:main-opts ["-m" "metav.spit"
+                                 "--output-dir" "src"
+                                 "--namespace" "talltale.meta"
+                                 "--formats" "cljc"]}}}

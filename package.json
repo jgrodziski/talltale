@@ -1,0 +1,30 @@
+{
+  "name": "talltale",
+  "version": "1.0.0",
+  "description": "A Clojure library designed to ... well, that part is up to you.",
+  "main": "karma.conf.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "big.js": "^5.2.2",
+    "js-joda": "^1.10.1",
+    "shadow-cljs": "^2.8.39"
+  },
+  "devDependencies": {
+    "karma": "^4.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cljs-test": "^0.1.0",
+    "karma-jasmine": "^2.0.1",
+    "puppeteer": "^1.13.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jgrodziski/talltale"
+  }
+}

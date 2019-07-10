@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [talltale.core :refer :all]))
 
-(deftest address-test 
+(deftest address-test
   (testing "address full generator"
     (is (not (nil? (address))))))
 

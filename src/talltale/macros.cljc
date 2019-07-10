@@ -27,7 +27,7 @@
 (defmacro generator-from-coll [default-locale ks]
   (let [name# (symbol (subs (str (last ks)) 1))
         namegen# (symbol (str name# "-gen"))]
-    `(do 
+    `(do
        (defn ~name#
          ([] (~name# ~default-locale))
          ([locale#] (rand-data locale# ~ks)))
