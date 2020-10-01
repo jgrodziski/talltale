@@ -107,6 +107,31 @@
 (generator-from-coll :en [:person :last-name-female])
 (generator-from-coll :en [:person :position])
 
+(defn random-letter []
+  (-> (rand-int 26) (+ 97) char))
+
+(defn random-digit []
+  (rand-int 10))
+
+(defn random-alphanum []
+  (if (= (rand-int 3) 0)
+    (first (str  (random-digit)))
+    (random-letter)))
+
+(defn random-password
+  "Return a random password of n length, if missing arg a random password of random length between 6 and 20 is generated"
+  ([] (random-password (+ (rand-int 14) 6)))
+  ([n] (apply str (repeatedly n random-alphanum))))
+
+(defn random-password-gen [] (gen/return (random-password)))
+
+(defn random-password-from-spec
+  "take an input like \"aa1aaaa1\" returns something like \"nz8iswp3\" if no arg then completely random password"
+  [spec]
+  (apply str (map (fn [c]
+                    (cond (#{\0 \1 \2 \3 \4 \5 \6 \7 \8 \9} c) (random-digit)
+                          :else (random-letter) )) spec)))
+
 (defn first-name
   ([] (first-name :en))
   ([locale] (if (= (rand-int 2) 0)
@@ -192,6 +217,7 @@
                      :position (position locale)
                      :phone-number (phone-number locale)
                      :age age
+                     :password (random-password)
                      :date-of-birth (date-of-birth age)
                      :picture-url (picture-url sex)
                      :address (address locale)})))
@@ -212,11 +238,12 @@
                             email (email-gen locale first-name last-name)
                             phone-number (phone-number-gen locale)
                             age (age-gen)
+                            password (random-password-gen)
                             date-of-birth (date-of-birth-gen age)
                             position (position-gen locale)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
-              (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
+              (create-map first-name last-name sex username email phone-number age password date-of-birth picture-url address))))
 
 (defn person-female
   ([] (person-female :en))
@@ -235,11 +262,12 @@
                             email (email-gen locale first-name last-name)
                             phone-number (phone-number-gen locale)
                             age (age-gen)
+                            password (random-password-gen)
                             date-of-birth (date-of-birth-gen age)
                             position (position-gen locale)
                             picture-url (picture-url-gen sex)
                             address (address-gen locale)]
-              (create-map first-name last-name sex username email phone-number age date-of-birth picture-url address))))
+              (create-map first-name last-name sex username email phone-number age password date-of-birth picture-url address))))
 
 (defn person
   ([] (person :en))
@@ -384,3 +412,4 @@
 (defn quality-color-animal
   []
   (str/join " " [(quality) (color) (animal)]))
+
