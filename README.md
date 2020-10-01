@@ -50,6 +50,7 @@ Require the core namespace, every generators is merged into the core namespace f
 ;; => {:address {:city "San Francisco", :postal-code "10000",
 ;;            :street "Summer Place", :street-number 1},
 ;;  :age 37,
+;;  :password  "62x4awex6m32s",
 ;;  :date-of-birth #object[org.joda.time.LocalDate 0x7d24c344 "1981-01-08"],
 ;;  :email "shannon@yahoo.com", :first-name "Khloe", :last-name "Shannon",
 ;;  :phone-number "122-122-122",
@@ -113,6 +114,7 @@ Notes: I use test.check generators for numbers, so don't be surprised by the val
 ;; Person
 (sex) 
 (username) 
+(password)
 (first-name) 
 (first-name-male) 
 (first-name-female) 

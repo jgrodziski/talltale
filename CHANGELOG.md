@@ -1,6 +1,8 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.5.0] - 2020-10-01
+- Add password generator
 
 ## [0.3.0] - 2019-04-12
 ### Changed
