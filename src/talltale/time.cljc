@@ -10,7 +10,8 @@
        [cljc.java-time.local-time :as lt]
        [cljc.java-time.zoned-date-time :as zdt]
        [cljc.java-time.zone-id :as zi :refer [get-available-zone-ids]]
-       [java-time :refer [local-date-time local-date local-time zoned-date-time instant]]))
+       ;[java-time :refer [local-date-time local-date local-time zoned-date-time instant]]
+       ))
   #?(:cljs
      (:require
        [cljs.spec.gen.alpha :as gen]
@@ -64,7 +65,7 @@
                (s/gen @all-zone-ids)]))
 
 (defn- interop-local-date-time [y m d h mm ss]
-  #?(:clj (local-date-time y m d h mm ss))
+  #?(:clj (ldt/of y m d h mm ss))
   #?(:cljs (ldt/of y m d h mm ss)))
 
 (s/def ::past (s/int-in (to-epoch-milli (t/instant (t/in (interop-local-date-time 2001 1 1 00 00 00) UTC)))
