@@ -7,12 +7,11 @@
    [clojure.test.check.generators :as check-gen]
    [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
-   #?(:clj [talltale.time :as time-spec])
-   #?(:clj [java-time :as time :refer [local-date minus years instant]])
    #?(:cljs [cljs-time.core :as time])
    #?(:cljs [cljs-time.coerce :as time-coerce])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
-   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]])))
+   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]]))
+  (:import [java.time LocalDate Instant]))
 
 (defn lorem-ipsum []
   (rand-data :en [:lorem-ipsum]))
@@ -161,7 +160,7 @@
 (defn date-of-birth
   ([] (date-of-birth (age)))
   ([age]
-   #?(:clj (local-date (time/minus (local-date) (time/years age))))
+   #?(:clj (.minusYears (LocalDate/now) age) )
    #?(:cljs (time-coerce/to-date (time/minus (time/today) (time/years age))))))
 
 (defn date-of-birth-gen [age]
@@ -372,7 +371,7 @@
       :phone-number (phone-number locale)
       :address (address locale)
       :updated-by (username locale)
-      :updated-at (instant)})))
+      :updated-at (Instant/now)})))
 
 (defn company-with-name [name]
   (company :en name))
