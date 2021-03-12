@@ -119,7 +119,7 @@
 
 (defn random-password
   "Return a random password of n length, if missing arg a random password of random length between 6 and 20 is generated"
-  ([] (random-password (+ (rand-int 14) 6)))
+  ([] (random-password (+ (rand-int 14) 8)))
   ([n] (apply str (repeatedly n random-alphanum))))
 
 (defn random-password-gen [] (gen/return (random-password)))
@@ -167,8 +167,8 @@
   (gen/return (date-of-birth age)))
 
 (defn- identifier [first-name last-name]
-  (let [lower-fn (lower-case first-name)
-        lower-ln (lower-case last-name)
+  (let [lower-fn (str/replace (str/lower-case first-name) " " "" )
+        lower-ln (str/replace (str/lower-case last-name) " " "")
         generators {:initial-last-name (fn [] (str (subs lower-fn 0 1) lower-ln))
                     :first-dot-last (fn [] (str lower-fn "." lower-ln))
                     :first-number (fn [] (str lower-fn (rand-int 999)))
@@ -181,6 +181,7 @@
   ([locale] (username (first-name locale) (last-name locale)))
   ([first-name last-name]
    (identifier first-name last-name)))
+
 (defn username-gen
   ([] (username-gen (first-name) (last-name)))
   ([locale] (username-gen (first-name locale) (last-name locale)))
