@@ -11,7 +11,7 @@
    #?(:cljs [cljs-time.coerce :as time-coerce])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
    #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]]))
-  (:import [java.time LocalDate Instant]))
+  #?(:clj (:import [java.time LocalDate Instant])))
 
 (defn lorem-ipsum []
   (rand-data :en [:lorem-ipsum]))
@@ -372,7 +372,8 @@
       :phone-number (phone-number locale)
       :address (address locale)
       :updated-by (username locale)
-      :updated-at (Instant/now)})))
+      :updated-at #?(:clj (Instant/now)
+                     :cljs (js/Date.))})))
 
 (defn company-with-name [name]
   (company :en name))
