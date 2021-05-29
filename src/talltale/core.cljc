@@ -379,7 +379,7 @@
   (company :en name))
 
 ;;declare Var to avoid Warning in CLJS because of test.check let macro
-(def first-name) (def last-name) (def email) (def sex) (def company-name) (def company-type)
+(declare first-name) (declare last-name) (declare email) (declare sex) (declare company-name) (declare company-type)
 
 (defn company-gen
   ([] (company-gen :en))
