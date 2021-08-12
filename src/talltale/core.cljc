@@ -1,5 +1,5 @@
 (ns talltale.core
-  #?(:cljs (:refer-clojure :exclude [name type]))
+  (:refer-clojure :exclude [name type])
   (:require
    [clojure.core :refer [name type] :rename {name core-name type core-type}]
    [clojure.string :as str :refer [lower-case upper-case]]
@@ -11,7 +11,7 @@
    #?(:cljs [cljs-time.coerce :as time-coerce])
    #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
    #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]]))
-  (:import [java.time LocalDate Instant]))
+  #?(:clj (:import [java.time LocalDate Instant])))
 
 (defn lorem-ipsum []
   (rand-data :en [:lorem-ipsum]))
@@ -372,13 +372,21 @@
       :phone-number (phone-number locale)
       :address (address locale)
       :updated-by (username locale)
-      :updated-at (Instant/now)})))
+      :updated-at #?(:clj (Instant/now)
+                     :cljs (js/Date.))})))
 
 (defn company-with-name [name]
   (company :en name))
 
 ;;declare Var to avoid Warning in CLJS because of test.check let macro
-(def first-name) (def last-name) (def email) (def sex) (def company-name) (def company-type)
+(declare name)
+(declare type)
+(declare first-name)
+(declare last-name)
+(declare email)
+(declare sex)
+(declare company-name)
+(declare company-type)
 
 (defn company-gen
   ([] (company-gen :en))
