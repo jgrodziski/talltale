@@ -1,5 +1,5 @@
 (ns talltale.core
-  #?(:cljs (:refer-clojure :exclude [name type]))
+  (:refer-clojure :exclude [name type])
   (:require
    [clojure.core :refer [name type] :rename {name core-name type core-type}]
    [clojure.string :as str :refer [lower-case upper-case]]
@@ -379,7 +379,14 @@
   (company :en name))
 
 ;;declare Var to avoid Warning in CLJS because of test.check let macro
-(declare first-name) (declare last-name) (declare email) (declare sex) (declare company-name) (declare company-type)
+(declare name)
+(declare type)
+(declare first-name)
+(declare last-name)
+(declare email)
+(declare sex)
+(declare company-name)
+(declare company-type)
 
 (defn company-gen
   ([] (company-gen :en))
