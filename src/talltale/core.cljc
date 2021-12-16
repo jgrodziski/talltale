@@ -202,7 +202,7 @@
 (defn fixed-email
   "return email address with constant host deduced from the username hash"
   [identifier]
-  (str identifier "@" (rand-data-from-seed (long/valueOf (.hashCode identifier)) :en [:person :personal-email])))
+  (str identifier "@" (rand-data-from-seed (long (hash identifier)) :en [:person :personal-email])))
 
 (defn email-gen [locale first-name last-name]
   (gen/return (email locale first-name last-name)))
