@@ -1,6 +1,6 @@
 {:paths ["resources" "src"]
- :deps  {org.clojure/clojure    {:mvn/version "1.10.1"}
-         org.clojure/core.async {:mvn/version "0.4.490"}
+ :deps  {org.clojure/clojure    {:mvn/version "1.10.3"}
+         org.clojure/core.async {:mvn/version "1.5.648"}
 
          com.lucasbradstreet/cljs-uuid-utils {:mvn/version "1.0.2"}
          tongue                              {:mvn/version "0.2.6"}

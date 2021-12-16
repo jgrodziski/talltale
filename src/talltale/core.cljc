@@ -9,8 +9,8 @@
    [clojure.spec.gen.alpha :as gen]
    #?(:cljs [cljs-time.core :as time])
    #?(:cljs [cljs-time.coerce :as time-coerce])
-   #?(:cljs [talltale.macros :refer [raw rand-data rand-excluding] :refer-macros [create-map generator-from-coll]])
-   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-excluding]]))
+   #?(:cljs [talltale.macros :refer [raw rand-data rand-data-from-seed rand-excluding] :refer-macros [create-map generator-from-coll]])
+   #?(:clj [talltale.macros :refer [create-map generator-from-coll raw rand-data rand-data-from-seed rand-excluding]]))
   (:import [java.time LocalDate Instant]))
 
 (defn lorem-ipsum []
@@ -198,6 +198,11 @@
   ([first-name last-name] (email :en first-name last-name))
   ([locale first-name last-name]
    (str (identifier first-name last-name) "@" (email-host locale))))
+
+(defn fixed-email
+  "return email address with constant host deduced from the username hash"
+  [identifier]
+  (str identifier "@" (rand-data-from-seed (long/valueOf (.hashCode identifier)) :en [:person :personal-email])))
 
 (defn email-gen [locale first-name last-name]
   (gen/return (email locale first-name last-name)))
