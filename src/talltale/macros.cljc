@@ -23,7 +23,7 @@
 
 (defn rand-data
   ([locale ks]
-   (rand-data (Random. )))
+   (rand-data (Random.) locale ks))
   ([rnd locale ks]
    (let [data (raw locale ks)]
      (if (coll? data)
