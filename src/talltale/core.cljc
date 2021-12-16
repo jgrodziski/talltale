@@ -188,11 +188,16 @@
   ([first-name last-name]
    (gen/return (username first-name last-name))))
 
+(defn email-host
+  ([] (email-host :en))
+  ([locale] (rand-data locale [:person :personal-email])))
+
 (defn email
   ([] (email (first-name) (last-name)))
+  ([identifier] (str identifier "@" (email-host)))
   ([first-name last-name] (email :en first-name last-name))
   ([locale first-name last-name]
-   (str (identifier first-name last-name) "@" (rand-data locale [:person :personal-email]))))
+   (str (identifier first-name last-name) "@" (email-host locale))))
 
 (defn email-gen [locale first-name last-name]
   (gen/return (email locale first-name last-name)))
