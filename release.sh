@@ -19,7 +19,7 @@ source ./build.sh
 
 ####################################################
 #                                                  #
-#     Clojars uploading stuff (easier with Maven)  #
+#     Clojars uploading stuff                      #
 #                                                  #
 ####################################################
 
@@ -38,15 +38,12 @@ else
     exit 1
 fi
 
-# mvn deploy 2>&1 > /dev/null
-
 ARTIFACT_NAME=$(clj -Ametav -m metav.display)
 ARTIFACT_ID=$(echo "$ARTIFACT_NAME" | cut -f1)
 ARTIFACT_VERSION=$(echo "$ARTIFACT_NAME" | cut -f2)
 
 JAR_FILENAME="$ARTIFACT_ID-$ARTIFACT_VERSION.jar"
 
-# deploy to clojar after docker buildx because asking the gpg passphrase cana be hidden with docker buildx...:-(
 clj -X:deploy :artifact \"$(echo target/$JAR_FILENAME)\"
 
 if [ $? -eq 0 ]; then
