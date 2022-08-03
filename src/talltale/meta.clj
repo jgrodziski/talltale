@@ -3,6 +3,6 @@
 
 (def module-name "talltale")
 (def path ".")
-(def version "0.5.10")
-(def tag "v0.5.10")
-(def generated-at "2022-08-03T09:02:29Z")
+(def version "0.5.11")
+(def tag "v0.5.11")
+(def generated-at "2022-08-03T09:26:07Z")
