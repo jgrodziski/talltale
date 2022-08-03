@@ -39,7 +39,10 @@ ARTIFACT_NAME=$(clj -Ametav -m metav.display)
 ARTIFACT_ID=$(echo "$ARTIFACT_NAME" | cut -f1)
 ARTIFACT_VERSION=$(echo "$ARTIFACT_NAME" | cut -f2)
 
-mvn deploy
+JAR_FILENAME="$ARTIFACT_ID-$ARTIFACT_VERSION.jar"
+
+# deploy to clojar after docker buildx because asking the gpg passphrase cana be hidden with docker buildx...:-(
+clj -X:deploy :artifact \"$(echo target/$JAR_FILENAME)\"
 
 if [ $? -eq 0 ]; then
     echo "Successfully deployed \"$MODULE_NAME\" version $newversion to clojars"

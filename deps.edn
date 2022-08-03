@@ -24,6 +24,10 @@
            :metav   {:extra-deps {metav {:mvn/version "1.6.7"}}}
            :display {:extra-deps {metav {:mvn/version "1.6.7"}}
                      :main-opts  ["-m" "metav.display"]}
+           :deploy  {:extra-deps {slipset/deps-deploy {:git/url "https://github.com/slipset/deps-deploy.git"
+                                                       :sha "b4359c5d67ca002d9ed0c4b41b710d7e5a82e3bf"}}
+                     :exec-fn deps-deploy.deps-deploy/deploy
+                     :exec-args {:installer :remote :sign-releases? true}}
            :release {:extra-deps {metav {:mvn/version "1.6.7"}
                                   org.apache.maven/maven-artifact {:mvn/version "3.6.0"}}
                      :main-opts  ["-m" "metav.release"
