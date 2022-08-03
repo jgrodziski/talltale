@@ -5,6 +5,7 @@
 node_modules
 pom.xml
 pom.xml.asc
+*.pom.asc
 *.jar
 *.class
 /.lein-*

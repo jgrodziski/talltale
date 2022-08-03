@@ -3,7 +3,7 @@
          org.clojure/core.async {:mvn/version "1.5.648"}
 
          com.lucasbradstreet/cljs-uuid-utils {:mvn/version "1.0.2"}
-         tongue                              {:mvn/version "0.2.6"}
+         tongue/tongue                       {:mvn/version "0.2.6"}
 
          org.clojure/test.check          {:mvn/version "0.10.0-alpha4"}}
 
@@ -21,23 +21,32 @@
                                                              :sha     "76568540e7f40268ad2b646110f237a60295fa3c"}}
                      :main-opts  ["-m" "cognitect.test-runner"
                                   "-d" "test"]}
-           :metav   {:extra-deps {metav {:mvn/version "1.6.7"}}}
-           :display {:extra-deps {metav {:mvn/version "1.6.7"}}
+           :metav   {:extra-deps {metav/metav {:mvn/version "1.6.7"}}}
+           :artifact-name {:extra-deps {metav/metav {:mvn/version "1.6.7"}}
+                           :main-opts  ["-m" "metav.display"]}
+           :display {:extra-deps {metav/metav {:mvn/version "1.6.7"}}
                      :main-opts  ["-m" "metav.display"]}
-           :deploy  {:extra-deps {slipset/deps-deploy {:git/url "https://github.com/slipset/deps-deploy.git"
-                                                       :sha "b4359c5d67ca002d9ed0c4b41b710d7e5a82e3bf"}}
-                     :exec-fn deps-deploy.deps-deploy/deploy
-                     :exec-args {:installer :remote :sign-releases? true}}
-           :release {:extra-deps {metav {:mvn/version "1.6.7"}
+           :release {:extra-deps {metav/metav {:mvn/version "1.6.7"}
                                   org.apache.maven/maven-artifact {:mvn/version "3.6.0"}}
                      :main-opts  ["-m" "metav.release"
                                   "--spit"
                                   "--output-dir" "src"
                                   "--namespace" "talltale.meta"
                                   "--formats" "clj"]}
-           :spit    {:extra-deps {metav {:mvn/version "1.6.7"}
+           :spit {:extra-deps {metav/metav {:mvn/version "1.6.7"}
                                   org.apache.maven/maven-artifact {:mvn/version "3.6.0"}}
                      :main-opts ["-m" "metav.spit"
                                  "--output-dir" "src"
                                  "--namespace" "talltale.meta"
-                                 "--formats" "cljc"]}}}
+                                 "--formats" "cljc"]}
+           :thin-jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.278"}}
+                      :exec-fn hf.depstar/jar
+                      :exec-args {:jar "target/keycloak-clojure.jar"
+                                  :sync-pom true
+                                  :paths-only true
+                                  :exclude [".*.edn" "realm-.*.clj" "logback.xml" "schema.png"]}}
+           :deploy  {:extra-deps {slipset/deps-deploy {:git/url "https://github.com/slipset/deps-deploy.git"
+                                                       :sha "b4359c5d67ca002d9ed0c4b41b710d7e5a82e3bf"}}
+                     :exec-fn deps-deploy.deps-deploy/deploy
+                     :exec-args {:installer :remote :sign-releases? true}}
+            }}
