@@ -15,10 +15,16 @@ I was inspired by the [JFairy lib](https://github.com/Codearte/jfairy) (I actual
 
 ## Installation
 
+Declare the lib dependency in your `deps.edn`:
+
+```clojure
+jgrodziski/talltale {:mvn/version "0.5.13"}
+```
+
 Declare the lib dependency in Leiningen:
 
 ```clojure
-[talltale "0.4.3"]
+[talltale "0.5.13"]
 ```
 
 ## Usage
