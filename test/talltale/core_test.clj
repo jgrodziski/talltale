@@ -1,5 +1,6 @@
 (ns talltale.core-test
   (:require [clojure.test :refer :all]
+            [clojure.spec.gen.alpha :as gen]
             [talltale.core :refer :all]))
 
 (deftest address-test
