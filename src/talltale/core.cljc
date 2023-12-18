@@ -5,7 +5,6 @@
    [clojure.string :as str :refer [lower-case upper-case]]
    [clojure.pprint :refer [cl-format]]
    [clojure.test.check.generators :as check-gen]
-   [clojure.spec.alpha :as s]
    [clojure.spec.gen.alpha :as gen]
    #?(:cljs [cljs-time.core :as time])
    #?(:cljs [cljs-time.coerce :as time-coerce])

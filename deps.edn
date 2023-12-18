@@ -1,24 +1,28 @@
 {:paths ["resources" "src"]
- :deps  {org.clojure/clojure    {:mvn/version "1.10.3"}
+ :deps  {org.clojure/clojure    {:mvn/version "1.11.1"}
          org.clojure/core.async {:mvn/version "1.5.648"}
 
          com.lucasbradstreet/cljs-uuid-utils {:mvn/version "1.0.2"}
          tongue/tongue                       {:mvn/version "0.2.6"}
+         tick/tick                           {:mvn/version "0.7.5"}
+         com.widdindustries/cljc.java-time   {:mvn/version "0.1.21"}
+         clojure.java-time/clojure.java-time {:mvn/version "0.3.3"}
 
-         org.clojure/test.check          {:mvn/version "0.10.0-alpha4"}}
 
- :aliases {:dev     {:extra-deps {vvvvalvalval/scope-capture {:mvn/version "0.3.2"}
+         org.clojure/test.check          {:mvn/version "1.1.1"}}
+
+ :aliases {:dev     {:extra-deps {vvvvalvalval/scope-capture {:mvn/version "0.3.3"}
                                   thheller/shadow-cljs       {:mvn/version "2.8.39"}}}
            :test    {:extra-paths ["test"]
-                     :extra-deps  {org.clojure/test.check      {:mvn/version "RELEASE"}
-                                   lambdaisland/kaocha         {:mvn/version "0.0-389"}
-                                   metosin/testit              {:mvn/version "0.3.0"}
+                     :extra-deps  {org.clojure/test.check      {:mvn/version "1.1.1"}
+                                   lambdaisland/kaocha         {:mvn/version "1.69.1069"}
+                                   metosin/testit              {:mvn/version "0.4.1"}
                                    pjstadig/humane-test-output {:mvn/version "0.9.0"}}}
            :test-js {:extra-paths ["test"]
                      :extra-deps  {day8.re-frame/test {:mvn/version "0.1.5"}}
                      :main-opts   ["-m" "shadow.cljs.devtools.cli" "compile" "test"]}
            :runner  {:extra-deps {com.cognitect/test-runner {:git/url "https://github.com/cognitect-labs/test-runner"
-                                                             :sha     "76568540e7f40268ad2b646110f237a60295fa3c"}}
+                                                             :sha     "a85b3b02765fb68684ab9ee4a8598eacf7e471d2"}}
                      :main-opts  ["-m" "cognitect.test-runner"
                                   "-d" "test"]}
            :metav   {:extra-deps {metav/metav {:mvn/version "1.6.7"}}}
@@ -27,7 +31,7 @@
            :display {:extra-deps {metav/metav {:mvn/version "1.6.7"}}
                      :main-opts  ["-m" "metav.display"]}
            :release {:extra-deps {metav/metav {:mvn/version "1.6.7"}
-                                  org.apache.maven/maven-artifact {:mvn/version "3.6.0"}}
+                                  org.apache.maven/maven-artifact {:mvn/version "3.8.6"}}
                      :main-opts  ["-m" "metav.release"
                                   "--spit"
                                   "--output-dir" "src"
@@ -39,7 +43,7 @@
                                  "--output-dir" "src"
                                  "--namespace" "talltale.meta"
                                  "--formats" "cljc"]}
-           :thin-jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.278"}}
+           :thin-jar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.1.303"}}
                       :exec-fn hf.depstar/jar
                       :exec-args {:jar "target/keycloak-clojure.jar"
                                   :sync-pom true
